@@ -1,12 +1,12 @@
 import {createElement} from '../render.js';
 
-function createTaskListTemplate() {
-  return '<ul class="trip-events__list"></ul>';
+function createTripPlanTemplate() {
+  return '<section class="trip-events container"></section>';
 }
 
-export default class TaskListView {
+export default class TripPlanView {
   getTemplate() {
-    return createTaskListTemplate();
+    return createTripPlanTemplate();
   }
 
   getElement() {
