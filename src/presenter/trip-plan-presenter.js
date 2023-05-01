@@ -15,7 +15,7 @@ export default class TripPlanPresenter {
   }
 
   init() {
-    this.tripEvents = [...this.tripEventsModel.getTasks()];
+    this.tripEvents = [...this.tripEventsModel.getTripEvents()];
 
     render(this.tripPlanComponent, this.tripPlanContainer);
     render(new SortView(), this.tripPlanComponent.getElement());
