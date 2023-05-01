@@ -1,6 +1,11 @@
 import {createElement} from '../render.js';
+import { humanizeDate } from '../util.js';
 
-function createTripEventTemplate() {
+function createTripEventTemplate(tripEvent) {
+  const {basePrice, dateFrom, dateTo, destination, isFavorite, offers, type} = tripEvent;
+  // const dateFromNew = humanizeDate(dateFrom);
+  // const dateToNew = humanizeDate(dateTo);
+
   return (
     `<li class="trip-events__item">
     <div class="event">
@@ -8,7 +13,7 @@ function createTripEventTemplate() {
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/check-in.png" alt="Event type icon">
       </div>
-      <h3 class="event__title">Check-in Chamonix</h3>
+      <h3 class="event__title">${type} ${destination.name}</h3>
       <div class="event__schedule">
         <p class="event__time">
           <time class="event__start-time" datetime="2019-03-18T12:25">16:20</time>
@@ -18,7 +23,7 @@ function createTripEventTemplate() {
         <p class="event__duration">40M</p>
       </div>
       <p class="event__price">
-        &euro;&nbsp;<span class="event__price-value">600</span>
+        &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
       </p>
       <h4 class="visually-hidden">Offers:</h4>
       <ul class="event__selected-offers">
@@ -43,8 +48,12 @@ function createTripEventTemplate() {
 }
 
 export default class TripEventView {
+  constructor({tripEvent}) {
+    this.tripEvent = tripEvent;
+  }
+
   getTemplate() {
-    return createTripEventTemplate();
+    return createTripEventTemplate(this.tripEvent);
   }
 
   getElement() {
