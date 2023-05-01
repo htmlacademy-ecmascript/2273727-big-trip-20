@@ -9,18 +9,21 @@ export default class TripPlanPresenter {
   tripPlanComponent = new TripPlanView();
   tripEventsListComponent = new TripEventsListView();
 
-  constructor({tripPlanContainer}) {
+  constructor({tripPlanContainer, tripEventsModel}) {
     this.tripPlanContainer = tripPlanContainer;
+    this.tripEventsModel = tripEventsModel;
   }
 
   init() {
+    this.tripEvents = [...this.tripEventsModel.getTasks()];
+
     render(this.tripPlanComponent, this.tripPlanContainer);
     render(new SortView(), this.tripPlanComponent.getElement());
     render(this.tripEventsListComponent, this.tripPlanComponent.getElement());
-    render(new TripEventEditView(), this.tripEventsListComponent.getElement());
+    render(new TripEventEditView({tripEvent: this.tripEvents[0]}), this.tripEventsListComponent.getElement());
 
-    for (let i = 0; i < 3; i++) {
-      render(new TripEventView(), this.tripEventsListComponent.getElement());
+    for (let i = 0; i < this.tripEvents.length; i++) {
+      render(new TripEventView({tripEvent: this.tripEvents[i]}), this.tripEventsListComponent.getElement());
     }
 
   }
