@@ -1,47 +1,39 @@
 import dayjs from 'dayjs';
 import {createElement} from '../render.js';
 import { humanizeDateForEvent, humanizeTimeFrom, humanizeTimeTo } from '../util.js';
+import utc from 'dayjs/plugin/utc';
+dayjs.extend(utc);
 
 function createTripEventTemplate(tripEvent, tripDestinations, tripOffers) {
-  const {basePrice, dateFrom, dateTo, destination, isFavorite, offers, type} = tripEvent; // НАДО ЗАДЕЙСТВОВАТЬ OFFERS
-
-  const destenationObject = tripDestinations.find((dstntn) => dstntn.id === destination);
-  // функция, вычленяющая из ВСЕХ вейпойнтов объект с нужным нам вейпойнтом через сравнение с ключом destination
-
-  const offersObject = tripOffers.find((offer) => offer.type === type);
-  // функция, вычленяющая из ВСЕХ офферов объект с нужными нами офферами через тайп
-  // ВОТ ЗДЕСЬ НАДО ДОДЕЛАТЬ ФУНКЦИЮ ТАК, ЧТОБЫ ОНА ИСКАЛА ТОЛЬКО ПЕРЕДАННЫЕ В ПОЛЕ OFFER ОФФЕРЫ, А НЕ ВСЕ СУЩЕСТВУЮЩИЕ. ВСЕ СУЩЕСТВУЮЩИЕ БУДУТ В ПОЛЕ РЕДАКТИРОВАНИЯ
+  const {basePrice, dateFrom, dateTo, isFavorite, type} = tripEvent; // НАДО ЗАДЕЙСТВОВАТЬ OFFERS
 
   const simpleDate = humanizeDateForEvent(dateFrom);
   const timeFrom = humanizeTimeFrom(dateFrom);
   const timeTo = humanizeTimeTo(dateTo);
 
+  const time = dayjs(dayjs(dateTo).diff(dayjs(dateFrom))).utc().format('HH[H] mm[M]'); // НЕКОРРЕКТНО ПОКАЗЫВАЕТ РАЗНИЦУ
 
-  const time = dayjs(dateTo).diff(dayjs(dateFrom), 'm'); // НЕКОРРЕКТНО ПОКАЗЫВАЕТ РАЗНИЦУ
+  const favoriteClassName = isFavorite
+    ? 'event__favorite-btn event__favorite-btn--active'
+    : 'event__favorite-btn';
 
-  const getOffersList = () => {
-    const offersList = [];
-    for (let i = 0; i < offersObject.offers.length; i++) {
-      const offer = `
-        <li class="event__offer">
-          <span class="event__offer-title">${offersObject.offers[i].title}</span>
-          &plus;&euro;&nbsp;
-          <span class="event__offer-price">${offersObject.offers[i].price}</span>
-        </li>`;
-      offersList.push(offer);
-    }
-    return offersList;
-  };
-
+  const offersList = tripOffers
+    .map((offer) => `
+  <li class="event__offer">
+    <span class="event__offer-title">${offer.title}</span>
+    &plus;&euro;&nbsp;
+    <span class="event__offer-price">${offer.price}</span>
+  </li>`)
+    .join('');
 
   return (
     `<li class="trip-events__item">
     <div class="event">
       <time class="event__date" datetime=${dateFrom}>${simpleDate}</time>
       <div class="event__type">
-        <img class="event__type-icon" width="42" height="42" src="img/icons/check-in.png" alt="Event type icon">
+        <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
       </div>
-      <h3 class="event__title">${type} ${destenationObject.name}</h3>
+      <h3 class="event__title">${type} ${tripDestinations.name}</h3>
       <div class="event__schedule">
         <p class="event__time">
           <time class="event__start-time" datetime=${dateFrom}>${timeFrom}</time>
@@ -55,9 +47,9 @@ function createTripEventTemplate(tripEvent, tripDestinations, tripOffers) {
       </p>
       <h4 class="visually-hidden">Offers:</h4>
       <ul class="event__selected-offers">
-        ${getOffersList().join('')}
+        ${offersList}
       </ul>
-      <button class="event__favorite-btn event__favorite-btn--active" type="button">
+      <button class="${favoriteClassName}" type="button">
         <span class="visually-hidden">Add to favorite</span>
         <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
           <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>

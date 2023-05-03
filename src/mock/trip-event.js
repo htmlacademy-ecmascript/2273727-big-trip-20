@@ -85,7 +85,7 @@ const mockTripOffers = [
         price: 50
       },
       {
-        id: '2',
+        id: 2,
         title: 'Choose seats',
         price: 60
       },
@@ -99,9 +99,9 @@ const getMockTripEvent = () => ({
   dateFrom: '2019-07-10T22:55:56.845Z',
   dateTo: '2019-07-11T11:22:13.375Z',
   destination: getRandomInteger(1, 4),
-  isFavorite: false,
+  isFavorite: getRandomInteger(0, 1),
   offers: [
-    1,2,3 // ВОТ ЗДЕСЬ ТОЛЬКО ВЫБРАННЫЕ ОФФЕРЫ, А НЕ ВСЕ СУЩЕСТВУЮЩИЕ
+    1,2 // ВОТ ЗДЕСЬ ТОЛЬКО ВЫБРАННЫЕ ОФФЕРЫ, А НЕ ВСЕ СУЩЕСТВУЮЩИЕ
   ],
   type: getRandomArrayElement(WAYPOINT_TYPES)
 });

@@ -20,6 +20,15 @@ export default class TripEventsModel {
   getTripOffers() {
     return this.tripOffers;
   }
+
+  getTripConcreteOffers(type) {
+    return this.tripOffers.find((offer) => offer.type === type).offers;
+  }
+
+  mapIdToOffers(ids, type) {
+    const offers = this.getTripConcreteOffers(type);
+    return ids.map((offerId) => offers.find((offer) => offer.id === offerId));
+  }
 }
 
 
