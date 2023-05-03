@@ -3,21 +3,36 @@ import {createElement} from '../render.js';
 import { humanizeDateForEvent, humanizeTimeFrom, humanizeTimeTo } from '../util.js';
 
 function createTripEventTemplate(tripEvent, tripDestinations, tripOffers) {
-  const {basePrice, dateFrom, dateTo, destination, isFavorite, offers, type} = tripEvent;
+  const {basePrice, dateFrom, dateTo, destination, isFavorite, offers, type} = tripEvent; // НАДО ЗАДЕЙСТВОВАТЬ OFFERS
 
   const destenationObject = tripDestinations.find((dstntn) => dstntn.id === destination);
   // функция, вычленяющая из ВСЕХ вейпойнтов объект с нужным нам вейпойнтом через сравнение с ключом destination
 
   const offersObject = tripOffers.find((offer) => offer.type === type);
   // функция, вычленяющая из ВСЕХ офферов объект с нужными нами офферами через тайп
+  // ВОТ ЗДЕСЬ НАДО ДОДЕЛАТЬ ФУНКЦИЮ ТАК, ЧТОБЫ ОНА ИСКАЛА ТОЛЬКО ПЕРЕДАННЫЕ В ПОЛЕ OFFER ОФФЕРЫ, А НЕ ВСЕ СУЩЕСТВУЮЩИЕ. ВСЕ СУЩЕСТВУЮЩИЕ БУДУТ В ПОЛЕ РЕДАКТИРОВАНИЯ
 
   const simpleDate = humanizeDateForEvent(dateFrom);
   const timeFrom = humanizeTimeFrom(dateFrom);
   const timeTo = humanizeTimeTo(dateTo);
 
 
+  const time = dayjs(dateTo).diff(dayjs(dateFrom), 'm'); // НЕКОРРЕКТНО ПОКАЗЫВАЕТ РАЗНИЦУ
 
-  const time = dayjs(dateTo).diff(dayjs(dateFrom), 'm');
+  const getOffersList = () => {
+    const offersList = [];
+    for (let i = 0; i < offersObject.offers.length; i++) {
+      const offer = `
+        <li class="event__offer">
+          <span class="event__offer-title">${offersObject.offers[i].title}</span>
+          &plus;&euro;&nbsp;
+          <span class="event__offer-price">${offersObject.offers[i].price}</span>
+        </li>`;
+      offersList.push(offer);
+    }
+    return offersList;
+  };
+
 
   return (
     `<li class="trip-events__item">
@@ -40,11 +55,7 @@ function createTripEventTemplate(tripEvent, tripDestinations, tripOffers) {
       </p>
       <h4 class="visually-hidden">Offers:</h4>
       <ul class="event__selected-offers">
-        <li class="event__offer">
-          <span class="event__offer-title">Add breakfast</span>
-          &plus;&euro;&nbsp;
-          <span class="event__offer-price">50</span>
-        </li>
+        ${getOffersList().join('')}
       </ul>
       <button class="event__favorite-btn event__favorite-btn--active" type="button">
         <span class="visually-hidden">Add to favorite</span>

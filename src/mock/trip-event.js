@@ -101,7 +101,7 @@ const getMockTripEvent = () => ({
   destination: getRandomInteger(1, 4),
   isFavorite: false,
   offers: [
-    1,2,3
+    1,2,3 // ВОТ ЗДЕСЬ ТОЛЬКО ВЫБРАННЫЕ ОФФЕРЫ, А НЕ ВСЕ СУЩЕСТВУЮЩИЕ
   ],
   type: getRandomArrayElement(WAYPOINT_TYPES)
 });
