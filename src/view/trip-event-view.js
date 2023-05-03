@@ -1,26 +1,39 @@
+import dayjs from 'dayjs';
 import {createElement} from '../render.js';
-import { humanizeDate } from '../util.js';
+import { humanizeDateForEvent, humanizeTimeFrom, humanizeTimeTo } from '../util.js';
 
-function createTripEventTemplate(tripEvent) {
+function createTripEventTemplate(tripEvent, tripDestinations, tripOffers) {
   const {basePrice, dateFrom, dateTo, destination, isFavorite, offers, type} = tripEvent;
-  // const dateFromNew = humanizeDate(dateFrom);
-  // const dateToNew = humanizeDate(dateTo);
+
+  const destenationObject = tripDestinations.find((dstntn) => dstntn.id === destination);
+  // функция, вычленяющая из ВСЕХ вейпойнтов объект с нужным нам вейпойнтом через сравнение с ключом destination
+
+  const offersObject = tripOffers.find((offer) => offer.type === type);
+  // функция, вычленяющая из ВСЕХ офферов объект с нужными нами офферами через тайп
+
+  const simpleDate = humanizeDateForEvent(dateFrom);
+  const timeFrom = humanizeTimeFrom(dateFrom);
+  const timeTo = humanizeTimeTo(dateTo);
+
+
+
+  const time = dayjs(dateTo).diff(dayjs(dateFrom), 'm');
 
   return (
     `<li class="trip-events__item">
     <div class="event">
-      <time class="event__date" datetime="2019-03-18">MAR 18</time>
+      <time class="event__date" datetime=${dateFrom}>${simpleDate}</time>
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/check-in.png" alt="Event type icon">
       </div>
-      <h3 class="event__title">${type} ${destination.name}</h3>
+      <h3 class="event__title">${type} ${destenationObject.name}</h3>
       <div class="event__schedule">
         <p class="event__time">
-          <time class="event__start-time" datetime="2019-03-18T12:25">16:20</time>
+          <time class="event__start-time" datetime=${dateFrom}>${timeFrom}</time>
           &mdash;
-          <time class="event__end-time" datetime="2019-03-18T13:35">17:00</time>
+          <time class="event__end-time" datetime=${dateTo}>${timeTo}</time>
         </p>
-        <p class="event__duration">40M</p>
+        <p class="event__duration">${time}</p>
       </div>
       <p class="event__price">
         &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
@@ -48,12 +61,14 @@ function createTripEventTemplate(tripEvent) {
 }
 
 export default class TripEventView {
-  constructor({tripEvent}) {
+  constructor({tripEvent, tripDestinations, tripOffers}) {
     this.tripEvent = tripEvent;
+    this.tripDestinations = tripDestinations;
+    this.tripOffers = tripOffers;
   }
 
   getTemplate() {
-    return createTripEventTemplate(this.tripEvent);
+    return createTripEventTemplate(this.tripEvent, this.tripDestinations, this.tripOffers);
   }
 
   getElement() {

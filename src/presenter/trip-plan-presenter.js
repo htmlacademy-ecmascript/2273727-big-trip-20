@@ -16,6 +16,8 @@ export default class TripPlanPresenter {
 
   init() {
     this.tripEvents = [...this.tripEventsModel.getTripEvents()];
+    this.tripDestinations = [...this.tripEventsModel.getTripDestinations()];
+    this.tripOffers = [...this.tripEventsModel.getTripOffers()];
 
     render(this.tripPlanComponent, this.tripPlanContainer);
     render(new SortView(), this.tripPlanComponent.getElement());
@@ -23,7 +25,7 @@ export default class TripPlanPresenter {
     render(new TripEventEditView({tripEvent: this.tripEvents[0]}), this.tripEventsListComponent.getElement());
 
     for (let i = 0; i < this.tripEvents.length; i++) {
-      render(new TripEventView({tripEvent: this.tripEvents[i]}), this.tripEventsListComponent.getElement());
+      render(new TripEventView({tripEvent: this.tripEvents[i], tripDestinations: this.tripDestinations, tripOffers: this.tripOffers}), this.tripEventsListComponent.getElement());
     }
 
   }

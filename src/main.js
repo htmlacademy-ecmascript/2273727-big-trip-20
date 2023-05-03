@@ -10,6 +10,7 @@ const tripMainContainer = document.querySelector('.trip-main');
 const filtersContainer = tripMainContainer.querySelector('.trip-controls__filters');
 const tripPlanContainer = document.querySelector('.trip-events');
 const tripEventsModel = new TripEventsModel();
+
 const tripPlanPresenter = new TripPlanPresenter({
   tripPlanContainer: tripPlanContainer,
   tripEventsModel,

@@ -1,4 +1,4 @@
-import { getMockTripEvent } from '../mock/trip-event';
+import { getMockTripEvent, mockTripDestinations, mockTripOffers } from '../mock/trip-event';
 
 const EVENTS_COUNT = 4;
 
@@ -8,4 +8,18 @@ export default class TripEventsModel {
   getTripEvents() {
     return this.tripEvents;
   }
+
+  tripDestinations = mockTripDestinations;
+
+  getTripDestinations() {
+    return this.tripDestinations;
+  }
+
+  tripOffers = mockTripOffers;
+
+  getTripOffers() {
+    return this.tripOffers;
+  }
 }
+
+

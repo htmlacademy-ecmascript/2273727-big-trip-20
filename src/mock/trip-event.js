@@ -1,17 +1,46 @@
 import { getRandomArrayElement, getRandomInteger } from '../util';
 import { WAYPOINT_TYPES, DESTINATIONS_DESCRIPTIONS, DESTINATIONS_NAMES } from '../const';
 
-const createMockDestination = () => ({
-  description: getRandomArrayElement(DESTINATIONS_DESCRIPTIONS),
-  name: getRandomArrayElement(DESTINATIONS_NAMES),
-  pictures: Array.from({length: getRandomInteger(1, 5)}, () => ({
-    src: `https://loremflickr.com/248/152?random=${getRandomInteger(1,30)}`,
-    description: getRandomArrayElement(DESTINATIONS_DESCRIPTIONS)
-  }))
-});
+const mockTripDestinations = [
+  {
+    id: 1,
+    description: getRandomArrayElement(DESTINATIONS_DESCRIPTIONS),
+    name: getRandomArrayElement(DESTINATIONS_NAMES),
+    pictures: Array.from({length: getRandomInteger(1, 5)}, () => ({
+      src: `https://loremflickr.com/248/152?random=${getRandomInteger(1,30)}`,
+      description: getRandomArrayElement(DESTINATIONS_DESCRIPTIONS)
+    }))
+  },
+  {
+    id: 2,
+    description: getRandomArrayElement(DESTINATIONS_DESCRIPTIONS),
+    name: getRandomArrayElement(DESTINATIONS_NAMES),
+    pictures: Array.from({length: getRandomInteger(1, 5)}, () => ({
+      src: `https://loremflickr.com/248/152?random=${getRandomInteger(1,30)}`,
+      description: getRandomArrayElement(DESTINATIONS_DESCRIPTIONS)
+    }))
+  },
+  {
+    id: 3,
+    description: getRandomArrayElement(DESTINATIONS_DESCRIPTIONS),
+    name: getRandomArrayElement(DESTINATIONS_NAMES),
+    pictures: Array.from({length: getRandomInteger(1, 5)}, () => ({
+      src: `https://loremflickr.com/248/152?random=${getRandomInteger(1,30)}`,
+      description: getRandomArrayElement(DESTINATIONS_DESCRIPTIONS)
+    }))
+  },
+  {
+    id: 4,
+    description: getRandomArrayElement(DESTINATIONS_DESCRIPTIONS),
+    name: getRandomArrayElement(DESTINATIONS_NAMES),
+    pictures: Array.from({length: getRandomInteger(1, 5)}, () => ({
+      src: `https://loremflickr.com/248/152?random=${getRandomInteger(1,30)}`,
+      description: getRandomArrayElement(DESTINATIONS_DESCRIPTIONS)
+    }))
+  }
+];
 
-
-const mockOffers = [
+const mockTripOffers = [
   {
     type: 'flight',
     offers: [
@@ -54,23 +83,29 @@ const mockOffers = [
         id: 1,
         title: 'Upgrade to a higher class',
         price: 50
-      }
+      },
+      {
+        id: '2',
+        title: 'Choose seats',
+        price: 60
+      },
     ]
   }
 ];
 
-function getMockTripEvent () {
-  const type = getRandomArrayElement(WAYPOINT_TYPES);
-  return {
-    basePrice: getRandomInteger(50, 1000),
-    dateFrom: new Date('2019-07-10T22:55:56.845Z'),
-    dateTo: new Date('2019-07-11T11:22:13.375Z'),
-    destination: createMockDestination(),
-    isFavorite: Math.random() > 0.5,
-    offers: mockOffers.find((offer) => offer.type === type),
-    type: type,
-  };
-}
+const getMockTripEvent = () => ({
+  id: getRandomInteger(1, 4),
+  basePrice: getRandomInteger(1000, 2000),
+  dateFrom: '2019-07-10T22:55:56.845Z',
+  dateTo: '2019-07-11T11:22:13.375Z',
+  destination: getRandomInteger(1, 4),
+  isFavorite: false,
+  offers: [
+    1,2,3
+  ],
+  type: getRandomArrayElement(WAYPOINT_TYPES)
+});
+
 
 // НАДО РАЗНООБРАЗИТЬ МОКИ, СДЕЛАТЬ ПОБОЛЬШЕ ЭЛЕМЕНТОВ В МАССИВАХ;
-export {getMockTripEvent};
+export {getMockTripEvent, mockTripDestinations, mockTripOffers};
