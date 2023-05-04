@@ -1,5 +1,6 @@
 import { createElement } from '../render.js';
 import { humanizeDateForEdit } from '../util.js';
+import { WAYPOINT_TYPES } from '../const.js';
 
 const BLANK_EVENT = {
   id: '',
@@ -14,29 +15,23 @@ const BLANK_EVENT = {
   type: 'taxi'
 };
 
-const BLANK_DESTINATION = {
-  id: '',
-  description: '',
-  name: '',
-  pictures: [
-    {
-      src: '',
-      description: ''
-    }
-  ]
-};
-
-const BLANK_OFFERS = {
-  type: 'bus',
-  offers: [
-    {
-      id: '',
-      title: '',
-      price: null
-    }
-  ]
-};
-
+function createTypesTemplate(currentType) {
+  return WAYPOINT_TYPES.map((type) => `
+    <div class="event__type-item">
+              <input
+                id="event-type-${type}-1"
+                class="event__type-input  visually-hidden"
+                type="radio" name="event-type"
+                value="${type}"
+                ${currentType === type ? 'checked' : ''}
+              >
+              <label
+                class="event__type-label  event__type-label--${type}"
+                for="event-type-${type}-1"
+                >${type}</label>
+            </div>
+  `).join('');
+}
 
 function createTripEventEditTemplate(tripEvent, destination, offers) {
   const {basePrice, dateFrom, dateTo, type} = tripEvent;
@@ -63,6 +58,8 @@ function createTripEventEditTemplate(tripEvent, destination, offers) {
     .join('');
 
 
+  const typesTemplate = createTypesTemplate(type);
+
   return (
     /*html*/ `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -77,51 +74,7 @@ function createTripEventEditTemplate(tripEvent, destination, offers) {
           <div class="event__type-list">
             <fieldset class="event__type-group">
               <legend class="visually-hidden">Event type</legend>
-
-              <div class="event__type-item">
-                <input id="event-type-taxi-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="taxi">
-                <label class="event__type-label  event__type-label--taxi" for="event-type-taxi-1">Taxi</label>
-              </div>
-
-              <div class="event__type-item">
-                <input id="event-type-bus-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="bus">
-                <label class="event__type-label  event__type-label--bus" for="event-type-bus-1">Bus</label>
-              </div>
-
-              <div class="event__type-item">
-                <input id="event-type-train-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="train">
-                <label class="event__type-label  event__type-label--train" for="event-type-train-1">Train</label>
-              </div>
-
-              <div class="event__type-item">
-                <input id="event-type-ship-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="ship">
-                <label class="event__type-label  event__type-label--ship" for="event-type-ship-1">Ship</label>
-              </div>
-
-              <div class="event__type-item">
-                <input id="event-type-drive-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="drive">
-                <label class="event__type-label  event__type-label--drive" for="event-type-drive-1">Drive</label>
-              </div>
-
-              <div class="event__type-item">
-                <input id="event-type-flight-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="flight" checked>
-                <label class="event__type-label  event__type-label--flight" for="event-type-flight-1">Flight</label>
-              </div>
-
-              <div class="event__type-item">
-                <input id="event-type-check-in-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="check-in">
-                <label class="event__type-label  event__type-label--check-in" for="event-type-check-in-1">Check-in</label>
-              </div>
-
-              <div class="event__type-item">
-                <input id="event-type-sightseeing-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="sightseeing">
-                <label class="event__type-label  event__type-label--sightseeing" for="event-type-sightseeing-1">Sightseeing</label>
-              </div>
-
-              <div class="event__type-item">
-                <input id="event-type-restaurant-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="restaurant">
-                <label class="event__type-label  event__type-label--restaurant" for="event-type-restaurant-1">Restaurant</label>
-              </div>
+              ${typesTemplate}
             </fieldset>
           </div>
         </div>
@@ -183,7 +136,7 @@ function createTripEventEditTemplate(tripEvent, destination, offers) {
 }
 
 export default class TripEventEditView {
-  constructor({tripEvent = BLANK_EVENT, destination = BLANK_DESTINATION, offers = BLANK_OFFERS}) {
+  constructor({tripEvent = BLANK_EVENT, destination, offers}) {
     this.tripEvent = tripEvent;
     this.destination = destination;
     this.offers = offers;
