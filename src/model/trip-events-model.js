@@ -1,4 +1,4 @@
-import { getMockTripEvent, mockTripDestinations, mockTripOffers } from '../mock/mock-trip-event';
+import { getMockTripEvent, mockTripDestinations, mockTripOffers } from '../mock/mock-objects';
 
 const EVENTS_COUNT = 4;
 

@@ -97,7 +97,7 @@ const getMockTripEvent = () => ({
   id: getRandomInteger(1, 4),
   basePrice: getRandomInteger(1000, 2000),
   dateFrom: '2019-07-10T22:55:56.845Z',
-  dateTo: '2019-07-11T23:22:13.375Z', // ЗДЕСЬ ПО ИДЕЕ РАЗНИЦА 1 ДЕНЬ И 26 МИНУТ, ОДНАКО ОН ВСЕГДА НАКИДЫВАЕТ ЛИШНИЙ ДЕНЬ ПОЧЕМУ-ТО
+  dateTo: '2019-07-11T23:22:13.375Z',
   destination: getRandomInteger(1, 4),
   isFavorite: getRandomInteger(0, 1),
   offers: [
