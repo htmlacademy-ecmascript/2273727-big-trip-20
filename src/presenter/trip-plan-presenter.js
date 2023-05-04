@@ -9,18 +9,34 @@ export default class TripPlanPresenter {
   tripPlanComponent = new TripPlanView();
   tripEventsListComponent = new TripEventsListView();
 
-  constructor({tripPlanContainer}) {
+  constructor({tripPlanContainer, tripEventsModel}) {
     this.tripPlanContainer = tripPlanContainer;
+    this.tripEventsModel = tripEventsModel;
   }
 
   init() {
+    this.tripEvents = [...this.tripEventsModel.getTripEvents()];
+    this.tripDestinations = [...this.tripEventsModel.getTripDestinations()];
+    this.tripOffers = [...this.tripEventsModel.getTripOffers()];
+
+
     render(this.tripPlanComponent, this.tripPlanContainer);
     render(new SortView(), this.tripPlanComponent.getElement());
     render(this.tripEventsListComponent, this.tripPlanComponent.getElement());
-    render(new TripEventEditView(), this.tripEventsListComponent.getElement());
 
-    for (let i = 0; i < 3; i++) {
-      render(new TripEventView(), this.tripEventsListComponent.getElement());
+    // логика отрсиовки редактора
+    const redactingEvent = this.tripEvents[0];
+    const destination = this.tripDestinations.find((dstntn) => dstntn.id === redactingEvent.destination);
+    const offers = this.tripEventsModel.getTripConcreteOffers(redactingEvent.type);
+    render(new TripEventEditView({tripEvent: redactingEvent, destination: destination, offers: offers}), this.tripEventsListComponent.getElement());
+
+    // логика отрисовки карточек ивентов
+    for (let i = 1; i < this.tripEvents.length; i++) {
+      const event = this.tripEvents[i];
+      const eventDestination = this.tripDestinations.find((dstntn) => dstntn.id === event.destination);
+      const eventOffers = this.tripEventsModel.mapIdToOffers(event.offers, event.type);
+
+      render(new TripEventView({tripEvent: event, destination: eventDestination, offers: eventOffers}), this.tripEventsListComponent.getElement());
     }
 
   }
