@@ -24,7 +24,7 @@ function createTripEventTemplate(tripEvent, destination, offers) {
     .join('');
 
   return (
-    `<li class="trip-events__item">
+    /*html*/ `<li class="trip-events__item">
     <div class="event">
       <time class="event__date" datetime=${dateFrom}>${date}</time>
       <div class="event__type">
