@@ -1,23 +1,20 @@
-import dayjs from 'dayjs';
 import {createElement} from '../render.js';
-import { humanizeDateForEvent, humanizeTimeFrom, humanizeTimeTo } from '../util.js';
-import utc from 'dayjs/plugin/utc';
-dayjs.extend(utc);
+import { humanizeDateForEvent, humanizeTimeFrom, humanizeTimeTo, getTimeGap } from '../util.js';
 
-function createTripEventTemplate(tripEvent, tripDestinations, tripOffers) {
-  const {basePrice, dateFrom, dateTo, isFavorite, type} = tripEvent; // НАДО ЗАДЕЙСТВОВАТЬ OFFERS
+function createTripEventTemplate(tripEvent, destination, offers) {
+  const {basePrice, dateFrom, dateTo, isFavorite, type} = tripEvent;
 
-  const simpleDate = humanizeDateForEvent(dateFrom);
+  const date = humanizeDateForEvent(dateFrom);
   const timeFrom = humanizeTimeFrom(dateFrom);
   const timeTo = humanizeTimeTo(dateTo);
 
-  const time = dayjs(dayjs(dateTo).diff(dayjs(dateFrom))).utc().format('HH[H] mm[M]'); // НЕКОРРЕКТНО ПОКАЗЫВАЕТ РАЗНИЦУ
+  const time = getTimeGap(dateFrom, dateTo); // НЕКОРРЕКТНО ПОКАЗЫВАЕТ РАЗНИЦУ!
 
   const favoriteClassName = isFavorite
     ? 'event__favorite-btn event__favorite-btn--active'
     : 'event__favorite-btn';
 
-  const offersList = tripOffers
+  const offersList = offers
     .map((offer) => `
   <li class="event__offer">
     <span class="event__offer-title">${offer.title}</span>
@@ -29,11 +26,11 @@ function createTripEventTemplate(tripEvent, tripDestinations, tripOffers) {
   return (
     `<li class="trip-events__item">
     <div class="event">
-      <time class="event__date" datetime=${dateFrom}>${simpleDate}</time>
+      <time class="event__date" datetime=${dateFrom}>${date}</time>
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
       </div>
-      <h3 class="event__title">${type} ${tripDestinations.name}</h3>
+      <h3 class="event__title">${type} ${destination.name}</h3>
       <div class="event__schedule">
         <p class="event__time">
           <time class="event__start-time" datetime=${dateFrom}>${timeFrom}</time>
@@ -64,14 +61,14 @@ function createTripEventTemplate(tripEvent, tripDestinations, tripOffers) {
 }
 
 export default class TripEventView {
-  constructor({tripEvent, tripDestinations, tripOffers}) {
+  constructor({tripEvent, destination, offers}) {
     this.tripEvent = tripEvent;
-    this.tripDestinations = tripDestinations;
-    this.tripOffers = tripOffers;
+    this.destination = destination;
+    this.offers = offers;
   }
 
   getTemplate() {
-    return createTripEventTemplate(this.tripEvent, this.tripDestinations, this.tripOffers);
+    return createTripEventTemplate(this.tripEvent, this.destination, this.offers);
   }
 
   getElement() {
