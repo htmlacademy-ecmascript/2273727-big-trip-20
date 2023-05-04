@@ -1,6 +1,43 @@
 import { createElement } from '../render.js';
 import { humanizeDateForEdit } from '../util.js';
 
+const BLANK_EVENT = {
+  id: '',
+  basePrice: null,
+  dateFrom: '',
+  dateTo: '',
+  destination: '',
+  isFavorite: false,
+  offers: [
+    ''
+  ],
+  type: 'taxi'
+};
+
+const BLANK_DESTINATION = {
+  id: '',
+  description: '',
+  name: '',
+  pictures: [
+    {
+      src: '',
+      description: ''
+    }
+  ]
+};
+
+const BLANK_OFFERS = {
+  type: 'bus',
+  offers: [
+    {
+      id: '',
+      title: '',
+      price: null
+    }
+  ]
+};
+
+
 function createTripEventEditTemplate(tripEvent, destination, offers) {
   const {basePrice, dateFrom, dateTo, type} = tripEvent;
   const dateFromFull = humanizeDateForEdit(dateFrom);
@@ -146,7 +183,7 @@ function createTripEventEditTemplate(tripEvent, destination, offers) {
 }
 
 export default class TripEventEditView {
-  constructor({tripEvent, destination, offers}) {
+  constructor({tripEvent = BLANK_EVENT, destination = BLANK_DESTINATION, offers = BLANK_OFFERS}) {
     this.tripEvent = tripEvent;
     this.destination = destination;
     this.offers = offers;

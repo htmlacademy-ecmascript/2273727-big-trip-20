@@ -10,17 +10,17 @@ const DATE_FORMAT_FOR_EVENT_TIME = 'HH:mm';
 const HOURES_IN_DAY = 24;
 const MINUTES_IN_HOUR = 60;
 const SECONDS_IN_MINUTE = 60;
-const MILLISECONDS_IN_SECOND = 1000;
-const MILLISECONDS_IN_MINUTE = MILLISECONDS_IN_SECOND * SECONDS_IN_MINUTE;
-const MILLISECONDS_IN_HOUR = MILLISECONDS_IN_MINUTE * MINUTES_IN_HOUR;
-const MILLISECONDS_IN_DAY = MILLISECONDS_IN_HOUR * HOURES_IN_DAY;
+const MS_IN_SECOND = 1000;
+const MS_IN_MINUTE = MS_IN_SECOND * SECONDS_IN_MINUTE;
+const MS_IN_HOUR = MS_IN_MINUTE * MINUTES_IN_HOUR;
+const MS_IN_DAY = MS_IN_HOUR * HOURES_IN_DAY;
 
 const getTimeGap = (dateFrom, dateTo) => {
   let timeGap = dayjs(dateTo).diff(dateFrom);
-  if (timeGap >= MILLISECONDS_IN_DAY) {
+  if (timeGap >= MS_IN_DAY) {
     timeGap = dayjs(dayjs(dateTo).diff(dayjs(dateFrom))).utc().format('DD[d] HH[H] mm[M]');
   } else
-  if (timeGap < MILLISECONDS_IN_DAY && timeGap >= MILLISECONDS_IN_HOUR) {
+  if (timeGap < MS_IN_DAY && timeGap >= MS_IN_HOUR) {
     timeGap = dayjs(dayjs(dateTo).diff(dayjs(dateFrom))).utc().format('HH[H] mm[M]');
   } else {
     timeGap = dayjs(dayjs(dateTo).diff(dayjs(dateFrom))).utc().format('mm[M]');

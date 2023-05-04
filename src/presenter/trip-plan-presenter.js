@@ -31,7 +31,7 @@ export default class TripPlanPresenter {
     render(new TripEventEditView({tripEvent: redactingEvent, destination: destination, offers: offers}), this.tripEventsListComponent.getElement());
 
     // логика отрисовки карточек ивентов
-    for (let i = 0; i < this.tripEvents.length; i++) {
+    for (let i = 1; i < this.tripEvents.length; i++) {
       const event = this.tripEvents[i];
       const eventDestination = this.tripDestinations.find((dstntn) => dstntn.id === event.destination);
       const eventOffers = this.tripEventsModel.mapIdToOffers(event.offers, event.type);
