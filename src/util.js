@@ -1,6 +1,11 @@
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import duration from 'dayjs/plugin/duration';
+import relativeTime from 'dayjs/plugin/relativeTime';
+
 dayjs.extend(utc);
+dayjs.extend(duration);
+dayjs.extend(relativeTime);
 
 // логика работы со временем
 const DATE_FORMAT_FOR_EDIT = 'DD/MM/YY HH:mm';
@@ -16,14 +21,18 @@ const MS_IN_HOUR = MS_IN_MINUTE * MINUTES_IN_HOUR;
 const MS_IN_DAY = MS_IN_HOUR * HOURES_IN_DAY;
 
 const getTimeGap = (dateFrom, dateTo) => {
-  let timeGap = dayjs(dateTo).diff(dateFrom);
-  if (timeGap >= MS_IN_DAY) {
-    timeGap = dayjs(dayjs(dateTo).diff(dayjs(dateFrom))).utc().format('DD[d] HH[H] mm[M]');
-  } else
-  if (timeGap < MS_IN_DAY && timeGap >= MS_IN_HOUR) {
-    timeGap = dayjs(dayjs(dateTo).diff(dayjs(dateFrom))).utc().format('HH[H] mm[M]');
-  } else {
-    timeGap = dayjs(dayjs(dateTo).diff(dayjs(dateFrom))).utc().format('mm[M]');
+  const timeDiff = dayjs(dateTo).diff(dayjs(dateFrom));
+  let timeGap = 0;
+  switch (true) {
+    case (timeDiff >= MS_IN_DAY) :
+      timeGap = dayjs.duration(timeDiff).format('DD[d] HH[H] mm[M]');
+      break;
+    case (timeDiff >= MS_IN_HOUR) :
+      timeGap = dayjs.duration(timeDiff).format('HH[H] mm[M]');
+      break;
+    case (timeDiff < MS_IN_HOUR) :
+      timeGap = dayjs.duration(timeDiff).format('mm[M]');
+      break;
   }
   return timeGap;
 };
