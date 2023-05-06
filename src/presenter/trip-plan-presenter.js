@@ -27,8 +27,8 @@ export default class TripPlanPresenter {
     // логика отрсиовки редактора
     const redactingEvent = this.tripEvents[0];
     const destination = this.tripDestinations.find((dstntn) => dstntn.id === redactingEvent.destination);
-    const offers = this.tripEventsModel.getTripConcreteOffers(redactingEvent.type);
-    render(new TripEventEditView({tripEvent: redactingEvent, destination: destination, offers: offers}), this.tripEventsListComponent.getElement());
+    // const offers = this.tripEventsModel.getTripConcreteOffers(redactingEvent.type);
+    render(new TripEventEditView({tripEvent: redactingEvent, destination: destination, offers: this.tripOffers}), this.tripEventsListComponent.getElement());
 
     // логика отрисовки карточек ивентов
     for (let i = 1; i < this.tripEvents.length; i++) {
