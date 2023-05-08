@@ -101,7 +101,7 @@ const getMockTripEvent = () => ({
   destination: getRandomInteger(1, 4),
   isFavorite: getRandomInteger(0, 1),
   offers: [
-    2 // напоминание: здесь показываются выбранные офферы, а не все существующие
+    1, 2 // напоминание: здесь показываются выбранные офферы, а не все существующие
   ],
   type: getRandomArrayElement(WAYPOINT_TYPES)
 });

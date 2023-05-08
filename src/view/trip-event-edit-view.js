@@ -1,6 +1,6 @@
 import { createElement } from '../render.js';
 import { humanizeDateForEdit } from '../util.js';
-import { WAYPOINT_TYPES } from '../const.js';
+import { WAYPOINT_TYPES, DESTINATIONS_NAMES } from '../const.js';
 
 const BLANK_EVENT = {
   id: '',
@@ -15,8 +15,7 @@ const BLANK_EVENT = {
   type: 'taxi'
 };
 
-function createTypesTemplate(currentType) {
-  return WAYPOINT_TYPES.map((type) => `
+const createTypesTemplate = (currentType) => WAYPOINT_TYPES.map((type) => `
     <div class="event__type-item">
       <input
         id="event-type-${type}-1"
@@ -31,7 +30,8 @@ function createTypesTemplate(currentType) {
       >${type}</label>
     </div>
   `).join('');
-}
+
+const createDestinationsTemplate = () => DESTINATIONS_NAMES.map((destination) => `<option value="${destination}"></option>`);
 
 function createTripEventEditTemplate(tripEvent, destination, offers) {
   const {basePrice, dateFrom, dateTo, type} = tripEvent;
@@ -45,7 +45,9 @@ function createTripEventEditTemplate(tripEvent, destination, offers) {
 
   const isChecked = (offer) => tripEvent.offers.includes(offer.id) ? 'checked' : '';
 
-  const offersList = offers
+  const concreteOffers = offers.find((offer) => offer.type === type).offers;
+
+  const offersList = concreteOffers
     .map((offer) => `
       <div class="event__offer-selector">
         <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" ${isChecked(offer)}>
@@ -56,7 +58,6 @@ function createTripEventEditTemplate(tripEvent, destination, offers) {
         </label>
       </div>`)
     .join('');
-
 
   const typesTemplate = createTypesTemplate(type);
 
@@ -85,9 +86,7 @@ function createTripEventEditTemplate(tripEvent, destination, offers) {
           </label>
           <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
           <datalist id="destination-list-1">
-            <option value="Amsterdam"></option>
-            <option value="Geneva"></option>
-            <option value="Chamonix"></option>
+            ${createDestinationsTemplate()}
           </datalist>
         </div>
 

@@ -1,5 +1,6 @@
 import {createElement} from '../render.js';
 
+// сюда по идее должны подтягиваться дестинейшны по порядку с путей назначения (+проверка на уникальность)
 function createTripInfoMainTemplate() {
   return `<div class="trip-info__main">
             <h1 class="trip-info__title">Amsterdam &mdash; Chamonix &mdash; Geneva</h1>
