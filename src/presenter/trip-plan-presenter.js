@@ -4,6 +4,7 @@ import SortView from '../view/sort-view.js';
 import TripEventView from '../view/trip-event-view.js';
 import TripEventsListView from '../view/trip-events-list-view.js';
 import TripEventEditView from '../view/trip-event-edit-view.js';
+import NoEventView from '../view/no-event-view.js';
 
 export default class TripPlanPresenter {
   #tripPlanContainer = null;
@@ -72,6 +73,12 @@ export default class TripPlanPresenter {
 
   #renderTripPlan() {
     render(this.#tripPlanComponent, this.#tripPlanContainer);
+
+    if (!this.#tripEvents) {
+      render(new NoEventView(), this.#tripPlanComponent.element);
+      return;
+    }
+
     render(new SortView(), this.#tripPlanComponent.element);
     render(this.#tripEventsListComponent, this.#tripPlanComponent.element);
 

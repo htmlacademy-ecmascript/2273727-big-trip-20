@@ -1,5 +1,5 @@
-import { getRandomArrayElement, getRandomInteger } from '../util';
-import { WAYPOINT_TYPES, DESTINATIONS_DESCRIPTIONS, DESTINATIONS_NAMES } from '../const';
+import { getRandomArrayElement, getRandomInteger } from '../utils/common.js';
+import { WAYPOINT_TYPES, DESTINATIONS_DESCRIPTIONS, DESTINATIONS_NAMES } from '../const.js';
 
 const mockTripDestinations = [
   {
