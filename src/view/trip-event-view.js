@@ -4,6 +4,15 @@ import { humanizeDateForEvent, humanizeTimeFrom, humanizeTimeTo, getTimeGap } fr
 function createTripEventTemplate(tripEvent, destination, offers) {
   const {basePrice, dateFrom, dateTo, isFavorite, type} = tripEvent;
 
+  const findTripConcreteOffers = (eventType) => offers.find((offer) => offer.type === eventType).offers;
+
+  const mapIdToOffers = (ids, eventType) => {
+    const concreteOffers = findTripConcreteOffers(eventType);
+    return ids.map((offerId) => concreteOffers.find((offer) => offer.id === offerId));
+  };
+
+  const eventOffers = mapIdToOffers(tripEvent.offers, tripEvent.type);
+
   const date = humanizeDateForEvent(dateFrom);
   const timeFrom = humanizeTimeFrom(dateFrom);
   const timeTo = humanizeTimeTo(dateTo);
@@ -14,7 +23,7 @@ function createTripEventTemplate(tripEvent, destination, offers) {
     ? 'event__favorite-btn event__favorite-btn--active'
     : 'event__favorite-btn';
 
-  const offersList = offers
+  const offersList = eventOffers
     .map((offer) => `
   <li class="event__offer">
     <span class="event__offer-title">${offer.title}</span>
