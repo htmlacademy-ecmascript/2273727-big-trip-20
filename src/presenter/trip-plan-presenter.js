@@ -1,4 +1,4 @@
-import {render} from '../framework/render.js';
+import {render, replace} from '../framework/render.js';
 import TripPlanView from '../view/trip-plan-view.js';
 import SortView from '../view/sort-view.js';
 import TripEventView from '../view/trip-event-view.js';
@@ -31,13 +31,13 @@ export default class TripPlanPresenter {
     render(this.#tripEventsListComponent, this.#tripPlanComponent.element);
 
     // логика отрсиовки редактора
-    const redactingEvent = this.#tripEvents[0];
-    const destination = this.#tripDestinations.find((dstntn) => dstntn.id === redactingEvent.destination);
+    // const redactingEvent = this.#tripEvents[0];
+    // const destination = this.#tripDestinations.find((dstntn) => dstntn.id === redactingEvent.destination);
 
-    render(new TripEventEditView({tripEvent: redactingEvent, destination: destination, offers: this.#tripOffers}), this.#tripEventsListComponent.element);
+    // render(new TripEventEditView({tripEvent: redactingEvent, destination: destination, offers: this.#tripOffers}), this.#tripEventsListComponent.element);
 
     // логика отрисовки карточек ивентов
-    for (let i = 1; i < this.#tripEvents.length; i++) {
+    for (let i = 0; i < this.#tripEvents.length; i++) {
       const event = this.#tripEvents[i];
       const eventDestination = this.#tripDestinations.find((dstntn) => dstntn.id === event.destination);
       const eventOffers = this.#tripEventsModel.mapIdToOffers(event.offers, event.type);
@@ -47,7 +47,39 @@ export default class TripPlanPresenter {
   }
 
   #renderEvent({tripEvent, destination, offers}) {
-    const eventComponent = new TripEventView({tripEvent, destination, offers});
+    const escKeyDownHandler = (evt) => {
+      if (evt.key === 'Escape') {
+        evt.preventDefault();
+        replaceRedactorToEvent();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
+    };
+    const eventComponent = new TripEventView({
+      tripEvent,
+      destination,
+      offers,
+      onEditClick: () => {
+        replaceEventToRedactor();
+        document.addEventListener('keydown', escKeyDownHandler);
+      }
+    });
+    const eventEditComponent = new TripEventEditView({
+      tripEvent,
+      destination,
+      offers,
+      onFormSubmit: () => {
+        replaceRedactorToEvent();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
+    });
+
+    function replaceEventToRedactor() {
+      replace(eventComponent, eventEditComponent);
+    }
+
+    function replaceRedactorToEvent() {
+      replace(eventEditComponent, eventComponent);
+    }
 
     render(eventComponent, this.#tripEventsListComponent.element);
   }

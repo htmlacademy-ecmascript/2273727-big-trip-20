@@ -34,6 +34,7 @@ const createTypesTemplate = (currentType) => WAYPOINT_TYPES.map((type) => `
 const createDestinationsTemplate = () => DESTINATIONS_NAMES.map((destination) => `<option value="${destination}"></option>`);
 
 function createTripEventEditTemplate(tripEvent, destination, offers) {
+
   const {basePrice, dateFrom, dateTo, type} = tripEvent;
   const dateFromFull = humanizeDateForEdit(dateFrom);
   const dateToFull = humanizeDateForEdit(dateTo);
@@ -138,15 +139,25 @@ export default class TripEventEditView extends AbstractView {
   #tripEvent = null;
   #destination = null;
   #offers = null;
+  #handleFormSubmit = null;
 
-  constructor({tripEvent = BLANK_EVENT, destination, offers}) {
+  constructor({tripEvent = BLANK_EVENT, destination, offers, onFormSubmit}) {
     super();
     this.#tripEvent = tripEvent;
     this.#destination = destination;
     this.#offers = offers;
+    this.#handleFormSubmit = onFormSubmit;
+
+    this.element.querySelector('.event__save-btn')
+      .addEventListener('submit', this.#formSubmitHandler);
   }
 
   get template() {
     return createTripEventEditTemplate(this.#tripEvent, this.#destination, this.#offers);
   }
+
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormSubmit();
+  };
 }
