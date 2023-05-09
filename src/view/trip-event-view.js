@@ -17,7 +17,7 @@ function createTripEventTemplate(tripEvent, destination, offers) {
   const timeFrom = humanizeTimeFrom(dateFrom);
   const timeTo = humanizeTimeTo(dateTo);
 
-  const time = getTimeGap(dateFrom, dateTo); // НЕКОРРЕКТНО ПОКАЗЫВАЕТ РАЗНИЦУ!
+  const time = getTimeGap(dateFrom, dateTo);
 
   const favoriteClassName = isFavorite
     ? 'event__favorite-btn event__favorite-btn--active'

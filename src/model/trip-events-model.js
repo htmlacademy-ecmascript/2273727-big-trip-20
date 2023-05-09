@@ -1,6 +1,6 @@
 import { getMockTripEvent, mockTripDestinations, mockTripOffers } from '../mock/mock-objects';
 
-const EVENTS_COUNT = 4;
+const EVENTS_COUNT = 8;
 
 export default class TripEventsModel {
   #tripEvents = Array.from({length: EVENTS_COUNT}, getMockTripEvent);

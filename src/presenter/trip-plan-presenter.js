@@ -30,14 +30,10 @@ export default class TripPlanPresenter {
     render(new SortView(), this.#tripPlanComponent.element);
     render(this.#tripEventsListComponent, this.#tripPlanComponent.element);
 
-    // логика отрсиовки редактора
-    // render(new TripEventEditView({tripEvent: redactingEvent, destination: destination, offers: this.#tripOffers}), this.#tripEventsListComponent.element);
-
     // логика отрисовки карточек ивентов
     for (let i = 0; i < this.#tripEvents.length; i++) {
       const event = this.#tripEvents[i];
       const eventDestination = this.#tripDestinations.find((dstntn) => dstntn.id === event.destination);
-      // const eventOffers = this.#tripEventsModel.mapIdToOffers(event.offers, event.type); // ! не могу сообразить, как этот метод перенести внутрь вьюхи ивента
       const eventOffers = this.#tripOffers; // здесь передаем внутрь вообще все офферы
       this.#renderEvent({tripEvent: event, destination: eventDestination, offers: eventOffers});
     }
@@ -67,15 +63,18 @@ export default class TripPlanPresenter {
       onFormSubmit: () => {
         replaceRedactorToEvent();
         document.removeEventListener('keydown', escKeyDownHandler);
+      },
+      onRollupButtonClick: () => {
+        replaceRedactorToEvent();
       }
     });
 
     function replaceEventToRedactor() {
-      replace(eventComponent, eventEditComponent);
+      replace(eventEditComponent, eventComponent);
     }
 
     function replaceRedactorToEvent() {
-      replace(eventEditComponent, eventComponent);
+      replace(eventComponent, eventEditComponent);
     }
 
     render(eventComponent, this.#tripEventsListComponent.element);

@@ -109,6 +109,9 @@ function createTripEventEditTemplate(tripEvent, destination, offers) {
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
         <button class="event__reset-btn" type="reset">Cancel</button>
+        <button class="event__rollup-btn" type="button">
+          <span class="visually-hidden">Open event</span>
+        </button>
       </header>
       <section class="event__details">
         <section class="event__section  event__section--offers">
@@ -140,16 +143,21 @@ export default class TripEventEditView extends AbstractView {
   #destination = null;
   #offers = null;
   #handleFormSubmit = null;
+  #handleRollupButtonClick = null;
 
-  constructor({tripEvent = BLANK_EVENT, destination, offers, onFormSubmit}) {
+  constructor({tripEvent = BLANK_EVENT, destination, offers, onFormSubmit, onRollupButtonClick}) {
     super();
     this.#tripEvent = tripEvent;
     this.#destination = destination;
     this.#offers = offers;
     this.#handleFormSubmit = onFormSubmit;
+    this.#handleRollupButtonClick = onRollupButtonClick;
 
-    this.element.querySelector('.event__save-btn')
+    this.element.querySelector('form')
       .addEventListener('submit', this.#formSubmitHandler);
+
+    this.element.querySelector('.event__rollup-btn')
+      .addEventListener('click', this.#rollupButtonClickHandler);
   }
 
   get template() {
@@ -159,5 +167,10 @@ export default class TripEventEditView extends AbstractView {
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
     this.#handleFormSubmit();
+  };
+
+  #rollupButtonClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleRollupButtonClick();
   };
 }
