@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { humanizeDateForEdit } from '../util.js';
 import { WAYPOINT_TYPES, DESTINATIONS_NAMES } from '../const.js';
 
@@ -134,26 +134,19 @@ function createTripEventEditTemplate(tripEvent, destination, offers) {
   );
 }
 
-export default class TripEventEditView {
+export default class TripEventEditView extends AbstractView {
+  #tripEvent = null;
+  #destination = null;
+  #offers = null;
+
   constructor({tripEvent = BLANK_EVENT, destination, offers}) {
-    this.tripEvent = tripEvent;
-    this.destination = destination;
-    this.offers = offers;
+    super();
+    this.#tripEvent = tripEvent;
+    this.#destination = destination;
+    this.#offers = offers;
   }
 
-  getTemplate() {
-    return createTripEventEditTemplate(this.tripEvent, this.destination, this.offers);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
+  get template() {
+    return createTripEventEditTemplate(this.#tripEvent, this.#destination, this.#offers);
   }
 }

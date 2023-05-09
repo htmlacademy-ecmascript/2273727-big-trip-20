@@ -1,4 +1,4 @@
-import {createElement} from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { humanizeDateForEvent, humanizeTimeFrom, humanizeTimeTo, getTimeGap } from '../util.js';
 
 function createTripEventTemplate(tripEvent, destination, offers) {
@@ -60,26 +60,19 @@ function createTripEventTemplate(tripEvent, destination, offers) {
   );
 }
 
-export default class TripEventView {
+export default class TripEventView extends AbstractView {
+  #tripEvent = null;
+  #destination = null;
+  #offers = null;
+
   constructor({tripEvent, destination, offers}) {
-    this.tripEvent = tripEvent;
-    this.destination = destination;
-    this.offers = offers;
+    super();
+    this.#tripEvent = tripEvent;
+    this.#destination = destination;
+    this.#offers = offers;
   }
 
-  getTemplate() {
-    return createTripEventTemplate(this.tripEvent, this.destination, this.offers);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
+  get template() {
+    return createTripEventTemplate(this.#tripEvent, this.#destination, this.#offers);
   }
 }
