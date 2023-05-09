@@ -26,17 +26,7 @@ export default class TripPlanPresenter {
     this.#tripDestinations = [...this.#tripEventsModel.tripDestinations];
     this.#tripOffers = [...this.#tripEventsModel.tripOffers];
 
-    render(this.#tripPlanComponent, this.#tripPlanContainer);
-    render(new SortView(), this.#tripPlanComponent.element);
-    render(this.#tripEventsListComponent, this.#tripPlanComponent.element);
-
-    // логика отрисовки карточек ивентов
-    for (let i = 0; i < this.#tripEvents.length; i++) {
-      const event = this.#tripEvents[i];
-      const eventDestination = this.#tripDestinations.find((dstntn) => dstntn.id === event.destination);
-      const eventOffers = this.#tripOffers; // здесь передаем внутрь вообще все офферы
-      this.#renderEvent({tripEvent: event, destination: eventDestination, offers: eventOffers});
-    }
+    this.#renderTripPlan();
   }
 
   #renderEvent({tripEvent, destination, offers}) {
@@ -78,5 +68,19 @@ export default class TripPlanPresenter {
     }
 
     render(eventComponent, this.#tripEventsListComponent.element);
+  }
+
+  #renderTripPlan() {
+    render(this.#tripPlanComponent, this.#tripPlanContainer);
+    render(new SortView(), this.#tripPlanComponent.element);
+    render(this.#tripEventsListComponent, this.#tripPlanComponent.element);
+
+    // логика отрисовки карточек ивентов
+    for (let i = 0; i < this.#tripEvents.length; i++) {
+      const event = this.#tripEvents[i];
+      const eventDestination = this.#tripDestinations.find((dstntn) => dstntn.id === event.destination);
+      const eventOffers = this.#tripOffers; // здесь передаем внутрь вообще все офферы
+      this.#renderEvent({tripEvent: event, destination: eventDestination, offers: eventOffers});
+    }
   }
 }
