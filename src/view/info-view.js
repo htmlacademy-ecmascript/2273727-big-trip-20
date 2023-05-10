@@ -22,7 +22,18 @@ function createTripInfoTemplate() {
     </section>`;
 }
 
-export default class TripInfoView extends AbstractView {
+export default class InfoView extends AbstractView {
+  #tripEvents = null;
+  #tripDestinations = null;
+  #tripOffers = null;
+
+  constructor({tripEvents, tripDestinations, tripOffers}) {
+    super();
+    this.#tripEvents = tripEvents;
+    this.#tripDestinations = tripDestinations;
+    this.#tripOffers = tripOffers;
+  }
+
   get template() {
     return createTripInfoTemplate();
   }
