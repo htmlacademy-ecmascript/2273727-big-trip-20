@@ -69,7 +69,7 @@ function createTripEventTemplate(tripEvent, destination, offers) {
   );
 }
 
-export default class TripEventView extends AbstractView {
+export default class EventView extends AbstractView {
   #tripEvent = null;
   #destination = null;
   #offers = null;

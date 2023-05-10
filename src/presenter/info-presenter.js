@@ -5,9 +5,9 @@ export default class InfoPresenter {
   #infoContainer = null;
   #eventsModel = null;
 
-  #tripEvents = [];
-  #tripDestinations = [];
-  #tripOffers = [];
+  #events = [];
+  #destinations = [];
+  #offers = [];
 
   constructor({infoContainer, eventsModel}) {
     this.#infoContainer = infoContainer;
@@ -15,14 +15,14 @@ export default class InfoPresenter {
   }
 
   init() {
-    this.#tripEvents = [...this.#eventsModel.tripEvents];
-    this.#tripDestinations = [...this.#eventsModel.tripDestinations];
-    this.#tripOffers = [...this.#eventsModel.tripOffers];
+    this.#events = [...this.#eventsModel.tripEvents];
+    this.#destinations = [...this.#eventsModel.tripDestinations];
+    this.#offers = [...this.#eventsModel.tripOffers];
 
     this.#renderInfo();
   }
 
   #renderInfo() {
-    render(new InfoView(this.#tripEvents, this.#tripDestinations, this.#tripOffers), this.#infoContainer, RenderPosition.AFTERBEGIN);
+    render(new InfoView(this.#events, this.#destinations, this.#offers), this.#infoContainer, RenderPosition.AFTERBEGIN);
   }
 }

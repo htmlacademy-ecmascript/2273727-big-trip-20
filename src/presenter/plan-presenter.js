@@ -1,21 +1,21 @@
 import {render, replace} from '../framework/render.js';
-import TripPlanView from '../view/plan-view.js';
+import PlanView from '../view/plan-view.js';
 import SortView from '../view/sort-view.js';
-import TripEventView from '../view/event-view.js';
-import TripEventsListView from '../view/events-list-view.js';
-import TripEventEditView from '../view/event-edit-view.js';
+import EventView from '../view/event-view.js';
+import EventsListView from '../view/events-list-view.js';
+import EventEditView from '../view/event-edit-view.js';
 import NoEventView from '../view/no-event-view.js';
 
 export default class PlanPresenter {
   #planContainer = null;
   #eventsModel = null;
 
-  #planComponent = new TripPlanView();
-  #tripEventsListComponent = new TripEventsListView();
+  #planComponent = new PlanView();
+  #tripEventsListComponent = new EventsListView();
 
-  #tripEvents = [];
-  #tripDestinations = [];
-  #tripOffers = [];
+  #events = [];
+  #destinations = [];
+  #offers = [];
 
   constructor({planContainer, eventsModel}) {
     this.#planContainer = planContainer;
@@ -23,11 +23,11 @@ export default class PlanPresenter {
   }
 
   init() {
-    this.#tripEvents = [...this.#eventsModel.tripEvents];
-    this.#tripDestinations = [...this.#eventsModel.tripDestinations];
-    this.#tripOffers = [...this.#eventsModel.tripOffers];
+    this.#events = [...this.#eventsModel.tripEvents];
+    this.#destinations = [...this.#eventsModel.tripDestinations];
+    this.#offers = [...this.#eventsModel.tripOffers];
 
-    this.#renderTripPlan();
+    this.#renderPlan();
   }
 
   #renderEvent({tripEvent, destination, offers}) {
@@ -38,7 +38,7 @@ export default class PlanPresenter {
         document.removeEventListener('keydown', escKeyDownHandler);
       }
     };
-    const eventComponent = new TripEventView({
+    const eventComponent = new EventView({
       tripEvent,
       destination,
       offers,
@@ -47,7 +47,7 @@ export default class PlanPresenter {
         document.addEventListener('keydown', escKeyDownHandler);
       }
     });
-    const eventEditComponent = new TripEventEditView({
+    const eventEditComponent = new EventEditView({
       tripEvent,
       destination,
       offers,
@@ -71,10 +71,10 @@ export default class PlanPresenter {
     render(eventComponent, this.#tripEventsListComponent.element);
   }
 
-  #renderTripPlan() {
+  #renderPlan() {
     render(this.#planComponent, this.#planContainer);
 
-    if (!this.#tripEvents) {
+    if (!this.#events) {
       render(new NoEventView(), this.#planComponent.element);
       return;
     }
@@ -83,10 +83,10 @@ export default class PlanPresenter {
     render(this.#tripEventsListComponent, this.#planComponent.element);
 
     // логика отрисовки карточек ивентов
-    for (let i = 0; i < this.#tripEvents.length; i++) {
-      const event = this.#tripEvents[i];
-      const eventDestination = this.#tripDestinations.find((dstntn) => dstntn.id === event.destination);
-      const eventOffers = this.#tripOffers; // здесь передаем внутрь вообще все офферы
+    for (let i = 0; i < this.#events.length; i++) {
+      const event = this.#events[i];
+      const eventDestination = this.#destinations.find((dstntn) => dstntn.id === event.destination);
+      const eventOffers = this.#offers; // здесь передаем внутрь вообще все офферы
       this.#renderEvent({tripEvent: event, destination: eventDestination, offers: eventOffers});
     }
   }
