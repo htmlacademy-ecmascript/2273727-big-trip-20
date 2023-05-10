@@ -15,9 +15,9 @@ export default class InfoPresenter {
   }
 
   init() {
-    this.#events = [...this.#eventsModel.tripEvents];
-    this.#destinations = [...this.#eventsModel.tripDestinations];
-    this.#offers = [...this.#eventsModel.tripOffers];
+    this.#events = [...this.#eventsModel.events];
+    this.#destinations = [...this.#eventsModel.destinations];
+    this.#offers = [...this.#eventsModel.offers];
 
     this.#renderInfo();
   }

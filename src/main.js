@@ -19,7 +19,7 @@ const infoPresenter = new InfoPresenter({
 
 infoPresenter.init();
 
-const filters = generateFilter(eventsModel.tripEvents);
+const filters = generateFilter(eventsModel.events);
 render(new FilterView({filters}), filtersContainer);
 
 planPresenter.init();

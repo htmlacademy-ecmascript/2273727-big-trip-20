@@ -23,15 +23,15 @@ function createTripInfoTemplate() {
 }
 
 export default class InfoView extends AbstractView {
-  #tripEvents = null;
-  #tripDestinations = null;
-  #tripOffers = null;
+  #events = null;
+  #destinations = null;
+  #offers = null;
 
-  constructor({tripEvents, tripDestinations, tripOffers}) {
+  constructor({events, destinations, offers}) {
     super();
-    this.#tripEvents = tripEvents;
-    this.#tripDestinations = tripDestinations;
-    this.#tripOffers = tripOffers;
+    this.#events = events;
+    this.#destinations = destinations;
+    this.#offers = offers;
   }
 
   get template() {

@@ -11,7 +11,7 @@ export default class PlanPresenter {
   #eventsModel = null;
 
   #planComponent = new PlanView();
-  #tripEventsListComponent = new EventsListView();
+  #eventsListComponent = new EventsListView();
 
   #events = [];
   #destinations = [];
@@ -23,9 +23,9 @@ export default class PlanPresenter {
   }
 
   init() {
-    this.#events = [...this.#eventsModel.tripEvents];
-    this.#destinations = [...this.#eventsModel.tripDestinations];
-    this.#offers = [...this.#eventsModel.tripOffers];
+    this.#events = [...this.#eventsModel.events];
+    this.#destinations = [...this.#eventsModel.destinations];
+    this.#offers = [...this.#eventsModel.offers];
 
     this.#renderPlan();
   }
@@ -68,7 +68,7 @@ export default class PlanPresenter {
       replace(eventComponent, eventEditComponent);
     }
 
-    render(eventComponent, this.#tripEventsListComponent.element);
+    render(eventComponent, this.#eventsListComponent.element);
   }
 
   #renderPlan() {
@@ -80,7 +80,7 @@ export default class PlanPresenter {
     }
 
     render(new SortView(), this.#planComponent.element);
-    render(this.#tripEventsListComponent, this.#planComponent.element);
+    render(this.#eventsListComponent, this.#planComponent.element);
 
     // логика отрисовки карточек ивентов
     for (let i = 0; i < this.#events.length; i++) {

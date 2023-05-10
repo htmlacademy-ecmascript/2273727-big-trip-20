@@ -3,22 +3,22 @@ import { getMockEvent, mockDestinations, mockOffers } from '../mock/mock-objects
 const EVENTS_COUNT = 8;
 
 export default class EventsModel {
-  #tripEvents = Array.from({length: EVENTS_COUNT}, getMockEvent);
+  #events = Array.from({length: EVENTS_COUNT}, getMockEvent);
 
-  get tripEvents() {
-    return this.#tripEvents;
+  get events() {
+    return this.#events;
   }
 
-  #tripDestinations = mockDestinations;
+  #destinations = mockDestinations;
 
-  get tripDestinations() {
-    return this.#tripDestinations;
+  get destinations() {
+    return this.#destinations;
   }
 
-  #tripOffers = mockOffers;
+  #offers = mockOffers;
 
-  get tripOffers() {
-    return this.#tripOffers;
+  get offers() {
+    return this.#offers;
   }
 }
 
