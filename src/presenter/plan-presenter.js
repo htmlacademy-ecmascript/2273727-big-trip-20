@@ -1,9 +1,9 @@
 import {render, replace} from '../framework/render.js';
-import TripPlanView from '../view/trip-plan-view.js';
+import TripPlanView from '../view/plan-view.js';
 import SortView from '../view/sort-view.js';
-import TripEventView from '../view/trip-event-view.js';
-import TripEventsListView from '../view/trip-events-list-view.js';
-import TripEventEditView from '../view/trip-event-edit-view.js';
+import TripEventView from '../view/event-view.js';
+import TripEventsListView from '../view/events-list-view.js';
+import TripEventEditView from '../view/event-edit-view.js';
 import NoEventView from '../view/no-event-view.js';
 
 export default class TripPlanPresenter {
