@@ -1,8 +1,8 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { humanizeDateForEvent, humanizeTimeFrom, humanizeTimeTo, getTimeGap } from '../utils/event.js';
 
-function createTripEventTemplate(tripEvent, destination, offers) {
-  const {basePrice, dateFrom, dateTo, isFavorite, type} = tripEvent;
+function createEventTemplate(event, destination, offers) {
+  const {basePrice, dateFrom, dateTo, isFavorite, type} = event;
 
   const findTripConcreteOffers = (eventType) => offers.find((offer) => offer.type === eventType).offers;
 
@@ -11,7 +11,7 @@ function createTripEventTemplate(tripEvent, destination, offers) {
     return ids.map((offerId) => concreteOffers.find((offer) => offer.id === offerId));
   };
 
-  const eventOffers = mapIdToOffers(tripEvent.offers, tripEvent.type);
+  const eventOffers = mapIdToOffers(event.offers, event.type);
 
   const date = humanizeDateForEvent(dateFrom);
   const timeFrom = humanizeTimeFrom(dateFrom);
@@ -70,14 +70,14 @@ function createTripEventTemplate(tripEvent, destination, offers) {
 }
 
 export default class EventView extends AbstractView {
-  #tripEvent = null;
+  #event = null;
   #destination = null;
   #offers = null;
   #handleEditClick = null;
 
-  constructor({tripEvent, destination, offers, onEditClick}) {
+  constructor({event, destination, offers, onEditClick}) {
     super();
-    this.#tripEvent = tripEvent;
+    this.#event = event;
     this.#destination = destination;
     this.#offers = offers;
     this.#handleEditClick = onEditClick;
@@ -87,7 +87,7 @@ export default class EventView extends AbstractView {
   }
 
   get template() {
-    return createTripEventTemplate(this.#tripEvent, this.#destination, this.#offers);
+    return createEventTemplate(this.#event, this.#destination, this.#offers);
   }
 
   #editClickHandler = (evt) => {

@@ -30,7 +30,7 @@ export default class PlanPresenter {
     this.#renderPlan();
   }
 
-  #renderEvent({tripEvent, destination, offers}) {
+  #renderEvent({event, destination, offers}) {
     const escKeyDownHandler = (evt) => {
       if (evt.key === 'Escape') {
         evt.preventDefault();
@@ -39,7 +39,7 @@ export default class PlanPresenter {
       }
     };
     const eventComponent = new EventView({
-      tripEvent,
+      event,
       destination,
       offers,
       onEditClick: () => {
@@ -48,7 +48,7 @@ export default class PlanPresenter {
       }
     });
     const eventEditComponent = new EventEditView({
-      tripEvent,
+      event,
       destination,
       offers,
       onFormSubmit: () => {
@@ -87,7 +87,7 @@ export default class PlanPresenter {
       const event = this.#events[i];
       const eventDestination = this.#destinations.find((dstntn) => dstntn.id === event.destination);
       const eventOffers = this.#offers; // здесь передаем внутрь вообще все офферы
-      this.#renderEvent({tripEvent: event, destination: eventDestination, offers: eventOffers});
+      this.#renderEvent({event, destination: eventDestination, offers: eventOffers});
     }
   }
 }
