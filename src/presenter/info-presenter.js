@@ -3,21 +3,21 @@ import InfoView from '../view/info-view.js';
 
 export default class InfoPresenter {
   #infoContainer = null;
-  #tripEventsModel = null;
+  #eventsModel = null;
 
   #tripEvents = [];
   #tripDestinations = [];
   #tripOffers = [];
 
-  constructor({infoContainer, tripEventsModel}) {
+  constructor({infoContainer, eventsModel}) {
     this.#infoContainer = infoContainer;
-    this.#tripEventsModel = tripEventsModel;
+    this.#eventsModel = eventsModel;
   }
 
   init() {
-    this.#tripEvents = [...this.#tripEventsModel.tripEvents];
-    this.#tripDestinations = [...this.#tripEventsModel.tripDestinations];
-    this.#tripOffers = [...this.#tripEventsModel.tripOffers];
+    this.#tripEvents = [...this.#eventsModel.tripEvents];
+    this.#tripDestinations = [...this.#eventsModel.tripDestinations];
+    this.#tripOffers = [...this.#eventsModel.tripOffers];
 
     this.#renderInfo();
   }

@@ -7,25 +7,25 @@ import TripEventEditView from '../view/event-edit-view.js';
 import NoEventView from '../view/no-event-view.js';
 
 export default class PlanPresenter {
-  #tripPlanContainer = null;
-  #tripEventsModel = null;
+  #planContainer = null;
+  #eventsModel = null;
 
-  #tripPlanComponent = new TripPlanView();
+  #planComponent = new TripPlanView();
   #tripEventsListComponent = new TripEventsListView();
 
   #tripEvents = [];
   #tripDestinations = [];
   #tripOffers = [];
 
-  constructor({tripPlanContainer, tripEventsModel}) {
-    this.#tripPlanContainer = tripPlanContainer;
-    this.#tripEventsModel = tripEventsModel;
+  constructor({planContainer, eventsModel}) {
+    this.#planContainer = planContainer;
+    this.#eventsModel = eventsModel;
   }
 
   init() {
-    this.#tripEvents = [...this.#tripEventsModel.tripEvents];
-    this.#tripDestinations = [...this.#tripEventsModel.tripDestinations];
-    this.#tripOffers = [...this.#tripEventsModel.tripOffers];
+    this.#tripEvents = [...this.#eventsModel.tripEvents];
+    this.#tripDestinations = [...this.#eventsModel.tripDestinations];
+    this.#tripOffers = [...this.#eventsModel.tripOffers];
 
     this.#renderTripPlan();
   }
@@ -72,15 +72,15 @@ export default class PlanPresenter {
   }
 
   #renderTripPlan() {
-    render(this.#tripPlanComponent, this.#tripPlanContainer);
+    render(this.#planComponent, this.#planContainer);
 
     if (!this.#tripEvents) {
-      render(new NoEventView(), this.#tripPlanComponent.element);
+      render(new NoEventView(), this.#planComponent.element);
       return;
     }
 
-    render(new SortView(), this.#tripPlanComponent.element);
-    render(this.#tripEventsListComponent, this.#tripPlanComponent.element);
+    render(new SortView(), this.#planComponent.element);
+    render(this.#tripEventsListComponent, this.#planComponent.element);
 
     // логика отрисовки карточек ивентов
     for (let i = 0; i < this.#tripEvents.length; i++) {

@@ -7,22 +7,19 @@ import { generateFilter } from './mock/filter.js';
 
 const tripMainContainer = document.querySelector('.trip-main');
 const filtersContainer = tripMainContainer.querySelector('.trip-controls__filters');
-const tripPlanContainer = document.querySelector('.trip-events');
-const tripEventsModel = new EventsModel();
+const planContainer = document.querySelector('.trip-events');
+const eventsModel = new EventsModel();
 
-const tripPlanPresenter = new PlanPresenter({
-  tripPlanContainer: tripPlanContainer,
-  tripEventsModel,
-});
+const planPresenter = new PlanPresenter({planContainer, eventsModel});
 
 const infoPresenter = new InfoPresenter({
   infoContainer: tripMainContainer,
-  tripEventsModel,
+  eventsModel: eventsModel,
 });
 
 infoPresenter.init();
 
-const filters = generateFilter(tripEventsModel.tripEvents);
+const filters = generateFilter(eventsModel.tripEvents);
 render(new FilterView({filters}), filtersContainer);
 
-tripPlanPresenter.init();
+planPresenter.init();
