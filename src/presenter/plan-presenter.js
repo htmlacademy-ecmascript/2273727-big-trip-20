@@ -6,7 +6,7 @@ import TripEventsListView from '../view/events-list-view.js';
 import TripEventEditView from '../view/event-edit-view.js';
 import NoEventView from '../view/no-event-view.js';
 
-export default class TripPlanPresenter {
+export default class PlanPresenter {
   #tripPlanContainer = null;
   #tripEventsModel = null;
 
