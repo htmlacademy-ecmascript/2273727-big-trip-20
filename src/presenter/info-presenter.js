@@ -23,6 +23,10 @@ export default class InfoPresenter {
   }
 
   #renderInfo() {
-    render(new InfoView(this.#events, this.#destinations, this.#offers), this.#infoContainer, RenderPosition.AFTERBEGIN);
+    const events = this.#events;
+    const destinations = this.#destinations;
+    const offers = this.#offers;
+    const infoView = new InfoView({events, destinations, offers});
+    render(infoView, this.#infoContainer, RenderPosition.AFTERBEGIN);
   }
 }

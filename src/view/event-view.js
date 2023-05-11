@@ -1,17 +1,10 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { humanizeDateForEvent, humanizeTimeFrom, humanizeTimeTo, getTimeGap } from '../utils/event.js';
+import { humanizeDateForEvent, humanizeTimeFrom, humanizeTimeTo, getTimeGap, mapIdToOffers } from '../utils/event.js';
 
 function createEventTemplate(event, destination, offers) {
   const {basePrice, dateFrom, dateTo, isFavorite, type} = event;
 
-  const findTripConcreteOffers = (eventType) => offers.find((offer) => offer.type === eventType).offers;
-
-  const mapIdToOffers = (ids, eventType) => {
-    const concreteOffers = findTripConcreteOffers(eventType);
-    return ids.map((offerId) => concreteOffers.find((offer) => offer.id === offerId));
-  };
-
-  const eventOffers = mapIdToOffers(event.offers, event.type);
+  const eventOffers = mapIdToOffers(offers, event.offers, event.type);
 
   const date = humanizeDateForEvent(dateFrom);
   const timeFrom = humanizeTimeFrom(dateFrom);

@@ -52,5 +52,11 @@ function isEventFuture(dateFrom, dateTo) {
   return (dayjs().diff(dayjs(dateFrom)) < 0 && dayjs().diff(dayjs(dateTo)) < 0);
 }
 
+const findTripConcreteOffers = (eventType, offers) => offers.find((offer) => offer.type === eventType).offers;
 
-export {humanizeDateForEdit, humanizeDateForEvent, humanizeTimeFrom, humanizeTimeTo, getTimeGap, isEventPast, isEventPresent, isEventFuture};
+const mapIdToOffers = (offers, ids, eventType) => {
+  const concreteOffers = findTripConcreteOffers(eventType, offers);
+  return ids.map((offerId) => concreteOffers.find((offer) => offer.id === offerId));
+};
+
+export {humanizeDateForEdit, humanizeDateForEvent, humanizeTimeFrom, humanizeTimeTo, getTimeGap, isEventPast, isEventPresent, isEventFuture, mapIdToOffers};
