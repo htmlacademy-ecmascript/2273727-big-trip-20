@@ -1,9 +1,10 @@
-import {render, RenderPosition} from '../framework/render.js';
+import { render, RenderPosition } from '../framework/render.js';
 import PlanView from '../view/plan-view.js';
 import SortView from '../view/sort-view.js';
 import EventsListView from '../view/events-list-view.js';
 import NoEventView from '../view/no-event-view.js';
 import EventPresenter from './event-presenter.js';
+import { updateItem } from '../utils/common.js';
 
 export default class PlanPresenter {
   #planContainer = null;
@@ -32,6 +33,12 @@ export default class PlanPresenter {
 
     this.#renderPlan();
   }
+
+  #handleEventChange = (updatedEvent) => {
+    this.#events = updateItem(this.#events, updatedEvent);
+    this.#eventPresenters.get(updatedEvent.id).init(updatedEvent);
+  };
+
 
   #renderSort() {
     render(this.#sortComponent, this.#planComponent.element, RenderPosition.AFTERBEGIN);
