@@ -1,4 +1,4 @@
-import {render, replace} from '../framework/render.js';
+import {render, replace, remove} from '../framework/render.js';
 import EventView from '../view/event-view.js';
 import EventEditView from '../view/event-edit-view.js';
 
@@ -21,6 +21,9 @@ export default class EventPresenter {
     this.#destination = destination;
     this.#offers = offers;
 
+    const prevEventComponent = this.#eventComponent;
+    const prevEventEditComponent = this.#eventEditComponent;
+
     this.#eventComponent = new EventView({
       event: this.#event,
       destination: this.#destination,
@@ -35,7 +38,26 @@ export default class EventPresenter {
       onRollupButtonClick: this.#handleRollupButtonClick,
     });
 
-    render(this.#eventComponent, this.#eventsListContainer);
+    if (prevEventComponent === null || prevEventEditComponent === null) {
+      render(this.#eventComponent, this.#eventsListContainer);
+      return;
+    }
+
+    if (this.#eventsListContainer.contains(prevEventComponent.element)) {
+      replace(this.#eventComponent, prevEventComponent);
+    }
+
+    if (this.#eventsListContainer.contains(prevEventEditComponent.element)) {
+      replace(this.#eventEditComponent, prevEventEditComponent);
+    }
+
+    remove(prevEventComponent);
+    remove(prevEventEditComponent);
+  }
+
+  destroy() {
+    remove(this.#eventComponent);
+    remove(this.#eventEditComponent);
   }
 
   #replaceEventToRedactor() {
