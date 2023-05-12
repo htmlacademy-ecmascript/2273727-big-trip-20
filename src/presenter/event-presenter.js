@@ -4,6 +4,7 @@ import EventEditView from '../view/event-edit-view.js';
 
 export default class EventPresenter {
   #eventsListContainer = null;
+  #handleDataChange = null;
 
   #eventComponent = null;
   #eventEditComponent = null;
@@ -12,8 +13,9 @@ export default class EventPresenter {
   #destination = null;
   #offers = null;
 
-  constructor({eventsListContainer}) {
+  constructor({eventsListContainer, onDataChange}) {
     this.#eventsListContainer = eventsListContainer;
+    this.#handleDataChange = onDataChange;
   }
 
   init({event, destination, offers}) {
@@ -29,6 +31,7 @@ export default class EventPresenter {
       destination: this.#destination,
       offers: this.#offers,
       onEditClick: this.#handleEditClick,
+      onFavoriteClick: this.#handleFavoriteClick,
     });
     this.#eventEditComponent = new EventEditView({
       event: this.#event,
@@ -81,11 +84,16 @@ export default class EventPresenter {
     this.#replaceEventToRedactor();
   };
 
-  #handleFormSubmit = () => {
+  #handleRollupButtonClick = () => {
     this.#replaceRedactorToEvent();
   };
 
-  #handleRollupButtonClick = () => {
+  #handleFavoriteClick = () => {
+    this.#handleDataChange({...this.#event, isFavorite: !this.#event.isFavorite});
+  };
+
+  #handleFormSubmit = (event) => {
+    this.#handleDataChange(event);
     this.#replaceRedactorToEvent();
   };
 }

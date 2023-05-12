@@ -100,7 +100,7 @@ const getMockEvent = () => ({
   dateFrom: '2019-07-10T22:55:56.845Z',
   dateTo: '2019-07-11T23:22:13.375Z',
   destination: getRandomInteger(1, 4),
-  isFavorite: getRandomInteger(0, 1),
+  isFavorite: false,
   offers: [
     1, 2 // напоминание: здесь показываются выбранные офферы, а не все существующие
   ],

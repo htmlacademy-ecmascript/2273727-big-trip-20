@@ -47,6 +47,7 @@ export default class PlanPresenter {
   #renderEvent({event, destination, offers}) {
     const eventPresenter = new EventPresenter({
       eventsListContainer: this.#eventsListComponent.element,
+      onDataChange: this.#handleEventChange,
     });
     eventPresenter.init({event, destination, offers});
     this.#eventPresenters.set(event.id, eventPresenter);
