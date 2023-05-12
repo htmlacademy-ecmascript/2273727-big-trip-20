@@ -18,6 +18,8 @@ export default class PlanPresenter {
   #destinations = [];
   #offers = [];
 
+  #eventPresenters = new Map();
+
   constructor({planContainer, eventsModel}) {
     this.#planContainer = planContainer;
     this.#eventsModel = eventsModel;
@@ -40,6 +42,7 @@ export default class PlanPresenter {
       eventsListContainer: this.#eventsListComponent.element,
     });
     eventPresenter.init({event, destination, offers});
+    this.#eventPresenters.set(event.id, eventPresenter);
   }
 
   #renderEvents() {
@@ -52,6 +55,11 @@ export default class PlanPresenter {
 
   #renderNoEvents() {
     render(this.#noEventComponent, this.#planComponent.element, RenderPosition.AFTERBEGIN);
+  }
+
+  #clearEventsList() {
+    this.#eventPresenters.forEach((presenter) => presenter.destroy());
+    this.#eventPresenters.clear();
   }
 
   #renderEventsList() {
