@@ -2,9 +2,15 @@ import {render, replace, remove} from '../framework/render.js';
 import EventView from '../view/event-view.js';
 import EventEditView from '../view/event-edit-view.js';
 
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
+};
+
 export default class EventPresenter {
   #eventsListContainer = null;
   #handleDataChange = null;
+  #handleModeChange = null;
 
   #eventComponent = null;
   #eventEditComponent = null;
@@ -12,10 +18,12 @@ export default class EventPresenter {
   #event = null;
   #destination = null;
   #offers = null;
+  #mode = Mode.DEFAULT;
 
-  constructor({eventsListContainer, onDataChange, destination, offers}) {
+  constructor({eventsListContainer, onDataChange, onModeChange, destination, offers}) {
     this.#eventsListContainer = eventsListContainer;
     this.#handleDataChange = onDataChange;
+    this.#handleModeChange = onModeChange;
 
     this.#destination = destination;
     this.#offers = offers;
@@ -47,11 +55,11 @@ export default class EventPresenter {
       return;
     }
 
-    if (this.#eventsListContainer.contains(prevEventComponent.element)) {
+    if (this.#mode === Mode.DEFAULT) {
       replace(this.#eventComponent, prevEventComponent);
     }
 
-    if (this.#eventsListContainer.contains(prevEventEditComponent.element)) {
+    if (this.#mode === Mode.EDITING) {
       replace(this.#eventEditComponent, prevEventEditComponent);
     }
 
@@ -64,14 +72,23 @@ export default class EventPresenter {
     remove(this.#eventEditComponent);
   }
 
+  resetView() {
+    if (this.#mode !== Mode.DEFAULT) {
+      this.#replaceRedactorToEvent();
+    }
+  }
+
   #replaceEventToRedactor() {
     replace(this.#eventEditComponent, this.#eventComponent);
     document.addEventListener('keydown', this.#escKeyDownHandler);
+    this.#handleModeChange();
+    this.#mode = Mode.EDITING;
   }
 
   #replaceRedactorToEvent() {
     replace(this.#eventComponent, this.#eventEditComponent);
     document.removeEventListener('keydown', this.#escKeyDownHandler);
+    this.#mode = Mode.DEFAULT;
   }
 
   #escKeyDownHandler = (evt) => {

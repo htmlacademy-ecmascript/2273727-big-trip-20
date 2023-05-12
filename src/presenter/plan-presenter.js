@@ -34,6 +34,10 @@ export default class PlanPresenter {
     this.#renderPlan();
   }
 
+  #handleModeChange = () => {
+    this.#eventPresenters.forEach((presenter) => presenter.resetView());
+  };
+
   #handleEventChange = (updatedEvent) => {
     this.#events = updateItem(this.#events, updatedEvent);
     this.#eventPresenters.get(updatedEvent.id).init(updatedEvent);
@@ -48,6 +52,7 @@ export default class PlanPresenter {
     const eventPresenter = new EventPresenter({
       eventsListContainer: this.#eventsListComponent.element,
       onDataChange: this.#handleEventChange,
+      onModeChange: this.#handleModeChange,
       destination, offers,
     });
     eventPresenter.init(event);
