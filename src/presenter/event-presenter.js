@@ -13,15 +13,16 @@ export default class EventPresenter {
   #destination = null;
   #offers = null;
 
-  constructor({eventsListContainer, onDataChange}) {
+  constructor({eventsListContainer, onDataChange, destination, offers}) {
     this.#eventsListContainer = eventsListContainer;
     this.#handleDataChange = onDataChange;
-  }
 
-  init({event, destination, offers}) {
-    this.#event = event;
     this.#destination = destination;
     this.#offers = offers;
+  }
+
+  init(event) {
+    this.#event = event;
 
     const prevEventComponent = this.#eventComponent;
     const prevEventEditComponent = this.#eventEditComponent;
