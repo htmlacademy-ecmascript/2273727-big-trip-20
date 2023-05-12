@@ -1,10 +1,9 @@
-import {render, RenderPosition, replace} from '../framework/render.js';
+import {render, RenderPosition} from '../framework/render.js';
 import PlanView from '../view/plan-view.js';
 import SortView from '../view/sort-view.js';
-import EventView from '../view/event-view.js';
 import EventsListView from '../view/events-list-view.js';
-import EventEditView from '../view/event-edit-view.js';
 import NoEventView from '../view/no-event-view.js';
+import EventPresenter from './event-presenter.js';
 
 export default class PlanPresenter {
   #planContainer = null;
@@ -37,44 +36,10 @@ export default class PlanPresenter {
   }
 
   #renderEvent({event, destination, offers}) {
-    const escKeyDownHandler = (evt) => {
-      if (evt.key === 'Escape') {
-        evt.preventDefault();
-        replaceRedactorToEvent();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    };
-    const eventComponent = new EventView({
-      event,
-      destination,
-      offers,
-      onEditClick: () => {
-        replaceEventToRedactor();
-        document.addEventListener('keydown', escKeyDownHandler);
-      }
+    const eventPresenter = new EventPresenter({
+      eventsListContainer: this.#eventsListComponent.element,
     });
-    const eventEditComponent = new EventEditView({
-      event,
-      destination,
-      offers,
-      onFormSubmit: () => {
-        replaceRedactorToEvent();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      },
-      onRollupButtonClick: () => {
-        replaceRedactorToEvent();
-      }
-    });
-
-    function replaceEventToRedactor() {
-      replace(eventEditComponent, eventComponent);
-    }
-
-    function replaceRedactorToEvent() {
-      replace(eventComponent, eventEditComponent);
-    }
-
-    render(eventComponent, this.#eventsListComponent.element);
+    eventPresenter.init({event, destination, offers});
   }
 
   #renderEvents() {
