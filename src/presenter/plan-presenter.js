@@ -1,4 +1,4 @@
-import {render, replace} from '../framework/render.js';
+import {render, RenderPosition, replace} from '../framework/render.js';
 import PlanView from '../view/plan-view.js';
 import SortView from '../view/sort-view.js';
 import EventView from '../view/event-view.js';
@@ -12,6 +12,8 @@ export default class PlanPresenter {
 
   #planComponent = new PlanView();
   #eventsListComponent = new EventsListView();
+  #sortComponent = new SortView();
+  #noEventComponent = new NoEventView();
 
   #events = [];
   #destinations = [];
@@ -28,6 +30,10 @@ export default class PlanPresenter {
     this.#offers = [...this.#eventsModel.offers];
 
     this.#renderPlan();
+  }
+
+  #renderSort() {
+    render(this.#sortComponent, this.#planComponent.element, RenderPosition.AFTERBEGIN);
   }
 
   #renderEvent({event, destination, offers}) {
@@ -71,23 +77,32 @@ export default class PlanPresenter {
     render(eventComponent, this.#eventsListComponent.element);
   }
 
+  #renderEvents() {
+    this.#events
+      .forEach((event) => this.#renderEvent({
+        event,
+        destination: this.#destinations.find((dstntn) => dstntn.id === event.destination),
+        offers: this.#offers}));
+  }
+
+  #renderNoEvents() {
+    render(this.#noEventComponent, this.#planComponent.element, RenderPosition.AFTERBEGIN);
+  }
+
+  #renderEventsList() {
+    render(this.#eventsListComponent, this.#planComponent.element);
+    this.#renderEvents();
+  }
+
   #renderPlan() {
     render(this.#planComponent, this.#planContainer);
 
     if (!this.#events) {
-      render(new NoEventView(), this.#planComponent.element);
+      this.#renderNoEvents();
       return;
     }
 
-    render(new SortView(), this.#planComponent.element);
-    render(this.#eventsListComponent, this.#planComponent.element);
-
-    // логика отрисовки карточек ивентов
-    for (let i = 0; i < this.#events.length; i++) {
-      const event = this.#events[i];
-      const eventDestination = this.#destinations.find((dstntn) => dstntn.id === event.destination);
-      const eventOffers = this.#offers; // здесь передаем внутрь вообще все офферы
-      this.#renderEvent({event, destination: eventDestination, offers: eventOffers});
-    }
+    this.#renderSort();
+    this.#renderEventsList();
   }
 }
