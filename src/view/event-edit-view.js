@@ -33,11 +33,11 @@ const createTypesTemplate = (currentType) => WAYPOINT_TYPES.map((type) => `
 
 const createDestinationsTemplate = () => DESTINATIONS_NAMES.map((destination) => `<option value="${destination}"></option>`);
 
-function createEventEditTemplate(event, destination, offers) {
+function createEventEditTemplate(event, destinations, offers) {
   const {basePrice, dateFrom, dateTo, type} = event;
   const dateFromFull = humanizeDateForEdit(dateFrom);
   const dateToFull = humanizeDateForEdit(dateTo);
-
+  const destination = destinations.find((dstntn) => dstntn.id === event.destination);
   const picturesList = destination.pictures
     .map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`)
     .join('');
@@ -144,11 +144,12 @@ export default class EventEditView extends AbstractStatefulView {
   #handleFormSubmit = null;
   #handleRollupButtonClick = null;
 
-  constructor({event = BLANK_EVENT, destination, destinations, offers, onFormSubmit, onRollupButtonClick}) {
+  constructor({event = BLANK_EVENT, destinations, offers, onFormSubmit, onRollupButtonClick}) {
     super();
     this._setState(EventEditView.parseEventToState(event));
-    this.#destination = destination;
+
     this.#destinations = destinations;
+    this.#destination = this.#destinations.find((dstntn) => dstntn.id === event.destination);
     this.#offers = offers;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleRollupButtonClick = onRollupButtonClick;
@@ -157,7 +158,7 @@ export default class EventEditView extends AbstractStatefulView {
   }
 
   get template() {
-    return createEventEditTemplate(this._state, this.#destination, this.#offers);
+    return createEventEditTemplate(this._state, this.#destinations, this.#offers);
   }
 
   _restoreHandlers() {
