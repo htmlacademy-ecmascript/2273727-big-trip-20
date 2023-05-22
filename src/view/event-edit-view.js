@@ -1,4 +1,4 @@
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { humanizeDateForEdit } from '../utils/event.js';
 import { WAYPOINT_TYPES, DESTINATIONS_NAMES } from '../const.js';
 
@@ -34,7 +34,6 @@ const createTypesTemplate = (currentType) => WAYPOINT_TYPES.map((type) => `
 const createDestinationsTemplate = () => DESTINATIONS_NAMES.map((destination) => `<option value="${destination}"></option>`);
 
 function createEventEditTemplate(event, destination, offers) {
-
   const {basePrice, dateFrom, dateTo, type} = event;
   const dateFromFull = humanizeDateForEdit(dateFrom);
   const dateToFull = humanizeDateForEdit(dateTo);
@@ -138,8 +137,8 @@ function createEventEditTemplate(event, destination, offers) {
   );
 }
 
-export default class EventEditView extends AbstractView {
-  #event = null;
+export default class EventEditView extends AbstractStatefulView {
+
   #destination = null;
   #offers = null;
   #handleFormSubmit = null;
@@ -147,7 +146,7 @@ export default class EventEditView extends AbstractView {
 
   constructor({event = BLANK_EVENT, destination, offers, onFormSubmit, onRollupButtonClick}) {
     super();
-    this.#event = event;
+    this._setState(EventEditView.parseEventToState(event));
     this.#destination = destination;
     this.#offers = offers;
     this.#handleFormSubmit = onFormSubmit;
@@ -161,7 +160,7 @@ export default class EventEditView extends AbstractView {
   }
 
   get template() {
-    return createEventEditTemplate(this.#event, this.#destination, this.#offers);
+    return createEventEditTemplate(this._state, this.#destination, this.#offers);
   }
 
   #rollupButtonClickHandler = (evt) => {
@@ -171,6 +170,15 @@ export default class EventEditView extends AbstractView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit(this.#event);
+    this.#handleFormSubmit(EventEditView.parseStateToEvent(this._state));
   };
+
+  static parseEventToState(event) { // ! пометка чтобы не забыть: как пользоваться этими штуками
+    return {...event}; // ! показано в коммите 6.1.1
+  }
+
+  static parseStateToEvent(state) { // функции парсинга дополнить, когда будут "усложнения" - всякие isRepeating и тд
+    const event = {...state};
+    return event;
+  }
 }
