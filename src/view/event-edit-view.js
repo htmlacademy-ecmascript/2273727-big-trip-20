@@ -139,14 +139,16 @@ function createEventEditTemplate(event, destination, offers) {
 export default class EventEditView extends AbstractStatefulView {
 
   #destination = null;
+  #destinations = null;
   #offers = null;
   #handleFormSubmit = null;
   #handleRollupButtonClick = null;
 
-  constructor({event = BLANK_EVENT, destination, offers, onFormSubmit, onRollupButtonClick}) {
+  constructor({event = BLANK_EVENT, destination, destinations, offers, onFormSubmit, onRollupButtonClick}) {
     super();
     this._setState(EventEditView.parseEventToState(event));
     this.#destination = destination;
+    this.#destinations = destinations;
     this.#offers = offers;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleRollupButtonClick = onRollupButtonClick;
@@ -191,11 +193,15 @@ export default class EventEditView extends AbstractStatefulView {
 
   #destinationChangeHandler = (evt) => {
     evt.preventDefault();
-    console.log(evt.target);
-    // this.updateElement({
-    //   destination: evt.target.value,
-    //   // здесь посложнее: дестинейшн - это айдишник, а в value лежит название города
-    // });
+    const dstntn = this.#destinations.find((destination) => destination.name === evt.target.value);
+    console.log(this._state);
+    if (dstntn) {
+      console.log('существует!');
+      this.updateElement({
+        destination: dstntn.id,
+      });
+      console.log(this._state);
+    }
   };
 
   static parseEventToState(event) { // ! пометка чтобы не забыть: как пользоваться этими штуками
