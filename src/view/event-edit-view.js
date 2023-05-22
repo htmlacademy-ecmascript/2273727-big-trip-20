@@ -42,7 +42,6 @@ function createEventEditTemplate(event, destination, offers) {
     .map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`)
     .join('');
 
-
   const isChecked = (offer) => event.offers.includes(offer.id) ? 'checked' : '';
 
   const concreteOffers = offers.find((offer) => offer.type === type).offers;
@@ -152,15 +151,25 @@ export default class EventEditView extends AbstractStatefulView {
     this.#handleFormSubmit = onFormSubmit;
     this.#handleRollupButtonClick = onRollupButtonClick;
 
+    this._restoreHandlers();
+  }
+
+  get template() {
+    return createEventEditTemplate(this._state, this.#destination, this.#offers);
+  }
+
+  _restoreHandlers() {
     this.element.querySelector('form')
       .addEventListener('submit', this.#formSubmitHandler);
 
     this.element.querySelector('.event__rollup-btn')
       .addEventListener('click', this.#rollupButtonClickHandler);
-  }
 
-  get template() {
-    return createEventEditTemplate(this._state, this.#destination, this.#offers);
+    this.element.querySelectorAll('.event__type-input')
+      .forEach((input) => input.addEventListener('change', this.#typeChangeHandler));
+
+    this.element.querySelector('.event__input--destination')
+      .addEventListener('change', this.#destinationChangeHandler);
   }
 
   #rollupButtonClickHandler = (evt) => {
@@ -171,6 +180,22 @@ export default class EventEditView extends AbstractStatefulView {
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
     this.#handleFormSubmit(EventEditView.parseStateToEvent(this._state));
+  };
+
+  #typeChangeHandler = (evt) => {
+    evt.preventDefault();
+    this.updateElement({ // здесь мы обновляем стейт и рендерим элемент уже на основании обновленного стейта
+      type: evt.target.value,
+    });
+  };
+
+  #destinationChangeHandler = (evt) => {
+    evt.preventDefault();
+    console.log(evt.target);
+    // this.updateElement({
+    //   destination: evt.target.value,
+    //   // здесь посложнее: дестинейшн - это айдишник, а в value лежит название города
+    // });
   };
 
   static parseEventToState(event) { // ! пометка чтобы не забыть: как пользоваться этими штуками
