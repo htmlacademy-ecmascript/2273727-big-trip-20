@@ -51,6 +51,7 @@ export default class EventPresenter {
       offers: this.#offers,
       onFormSubmit: this.#handleFormSubmit,
       onRollupButtonClick: this.#handleRollupButtonClick,
+      onCancelClick: this.#handleCancelClick,
     });
 
     if (prevEventComponent === null || prevEventEditComponent === null) {
@@ -77,6 +78,7 @@ export default class EventPresenter {
 
   resetView() {
     if (this.#mode !== Mode.DEFAULT) {
+      this.#eventEditComponent.reset(this.#event);
       this.#replaceRedactorToEvent();
     }
   }
@@ -97,8 +99,14 @@ export default class EventPresenter {
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
+      this.#eventEditComponent.reset(this.#event);
       this.#replaceRedactorToEvent();
     }
+  };
+
+  #handleCancelClick = () => {
+    this.#eventEditComponent.reset(this.#event);
+    this.#replaceRedactorToEvent();
   };
 
   #handleEditClick = () => {
@@ -106,6 +114,7 @@ export default class EventPresenter {
   };
 
   #handleRollupButtonClick = () => {
+    this.#eventEditComponent.reset(this.#event);
     this.#replaceRedactorToEvent();
   };
 

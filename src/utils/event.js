@@ -12,13 +12,13 @@ const DATE_FORMAT_FOR_EDIT = 'DD/MM/YY HH:mm';
 const DATE_FORMAT_FOR_EVENT_DATE = 'MMM DD';
 const DATE_FORMAT_FOR_EVENT_TIME = 'HH:mm';
 
-const HOURES_IN_DAY = 24;
+const HOURS_IN_DAY = 24;
 const MINUTES_IN_HOUR = 60;
 const SECONDS_IN_MINUTE = 60;
 const MS_IN_SECOND = 1000;
 const MS_IN_MINUTE = MS_IN_SECOND * SECONDS_IN_MINUTE;
 const MS_IN_HOUR = MS_IN_MINUTE * MINUTES_IN_HOUR;
-const MS_IN_DAY = MS_IN_HOUR * HOURES_IN_DAY;
+const MS_IN_DAY = MS_IN_HOUR * HOURS_IN_DAY;
 
 const getTimeGap = (dateFrom, dateTo) => {
   const timeDiff = dayjs(dateTo).diff(dayjs(dateFrom));
@@ -41,6 +41,14 @@ const humanizeDateForEdit = (date) => date ? dayjs(date).utc().format(DATE_FORMA
 const humanizeDateForEvent = (date) => date ? dayjs(date).utc().format(DATE_FORMAT_FOR_EVENT_DATE) : '';
 const humanizeTimeFrom = (date) => date ? dayjs(date).utc().format(DATE_FORMAT_FOR_EVENT_TIME) : '';
 const humanizeTimeTo = (date) => date ? dayjs(date).utc().format(DATE_FORMAT_FOR_EVENT_TIME) : '';
+
+const parseDateFromEditFormat = (dateString) => {
+  const parsedDate = dayjs.utc(dayjs(dateString)).format();
+  return parsedDate;
+};
+console.log(humanizeDateForEdit('2019-07-11T23:22:13.375Z'))
+console.log(dayjs(humanizeDateForEdit('2019-07-11T23:22:13.375Z'))) // вот здесь уже ошибки: через dayjs видно, что месяц и дата спутаны местами, хотя внешне выглядит корректно
+console.log(parseDateFromEditFormat(humanizeDateForEdit('2019-07-11T23:22:13.375Z'))); // выводит месяц и даты спутанные местами и на 4 часа меньше чем нужно
 
 function isEventPast(dateFrom, dateTo) {
   return (dayjs().isAfter(dayjs(dateFrom)) && dayjs().isAfter(dayjs(dateTo)));
@@ -81,4 +89,4 @@ function sortByPrice(eventA, eventB) {
   return eventB.basePrice - eventA.basePrice;
 }
 
-export { humanizeDateForEdit, humanizeDateForEvent, humanizeTimeFrom, humanizeTimeTo, getTimeGap, isEventPast, isEventPresent, isEventFuture, mapIdToOffers, sortByDay, sortByTime, sortByPrice };
+export { humanizeDateForEdit, humanizeDateForEvent, humanizeTimeFrom, humanizeTimeTo, getTimeGap, isEventPast, isEventPresent, isEventFuture, mapIdToOffers, sortByDay, sortByTime, sortByPrice, parseDateFromEditFormat };
