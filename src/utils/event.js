@@ -45,10 +45,7 @@ const humanizeDateForEvent = (date) => date ? dayjs(date).utc().format(DATE_FORM
 const humanizeTimeFrom = (date) => date ? dayjs(date).utc().format(DATE_FORMAT_FOR_EVENT_TIME) : '';
 const humanizeTimeTo = (date) => date ? dayjs(date).utc().format(DATE_FORMAT_FOR_EVENT_TIME) : '';
 
-const parseDateFromEditFormat = (dateString) => {
-  const parsedDate = dayjs.utc(dateString, DATE_FORMAT_FOR_EDIT).format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
-  return parsedDate;
-};
+const parseDateFromEditFormat = (dateString) => dayjs.utc(dateString, DATE_FORMAT_FOR_EDIT).format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
 
 function isEventPast(dateFrom, dateTo) {
   return (dayjs().isAfter(dayjs(dateFrom)) && dayjs().isAfter(dayjs(dateTo)));
