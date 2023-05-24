@@ -17,8 +17,8 @@ function createFilterItemTemplate(filter, isChecked) {
         <label
           class="trip-filters__filter-label"
           for="filter-${type}"
-        >${type} ${count}</label>
-    </div>` // ! ОСТАВИЛ ОТОБРАЖЕНИЕ ЦИФР ДЛЯ НАГЛЯДНОСТИ ФИЛЬТРОВ, НУЖНО НЕ ЗАБЫТЬ УДАЛИТЬ ПЕРЕД СДАЧЕЙ ПРОЕКТА
+        >${type}</label>
+    </div>`
   );
 }
 
