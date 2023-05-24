@@ -2,10 +2,13 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import duration from 'dayjs/plugin/duration';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+
 
 dayjs.extend(utc);
 dayjs.extend(duration);
 dayjs.extend(relativeTime);
+dayjs.extend(customParseFormat);
 
 // логика работы со временем
 const DATE_FORMAT_FOR_EDIT = 'DD/MM/YY HH:mm';
@@ -43,12 +46,9 @@ const humanizeTimeFrom = (date) => date ? dayjs(date).utc().format(DATE_FORMAT_F
 const humanizeTimeTo = (date) => date ? dayjs(date).utc().format(DATE_FORMAT_FOR_EVENT_TIME) : '';
 
 const parseDateFromEditFormat = (dateString) => {
-  const parsedDate = dayjs.utc(dayjs(dateString)).format();
+  const parsedDate = dayjs.utc(dateString, DATE_FORMAT_FOR_EDIT).format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
   return parsedDate;
 };
-console.log(humanizeDateForEdit('2019-07-11T23:22:13.375Z'))
-console.log(dayjs(humanizeDateForEdit('2019-07-11T23:22:13.375Z'))) // вот здесь уже ошибки: через dayjs видно, что месяц и дата спутаны местами, хотя внешне выглядит корректно
-console.log(parseDateFromEditFormat(humanizeDateForEdit('2019-07-11T23:22:13.375Z'))); // выводит месяц и даты спутанные местами и на 4 часа меньше чем нужно
 
 function isEventPast(dateFrom, dateTo) {
   return (dayjs().isAfter(dayjs(dateFrom)) && dayjs().isAfter(dayjs(dateTo)));
