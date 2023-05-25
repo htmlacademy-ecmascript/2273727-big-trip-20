@@ -63,7 +63,7 @@ function createEventEditTemplate(event, destinations, offers) {
 
   const typesTemplate = createTypesTemplate(type);
 
-  const isSubmitDisabled = false;
+  const isSubmitDisabled = false; // УДАЛИТЬ ЕСЛИ ТАК И НЕ ПОНАДОБИТСЯ
 
   return (
     /*html*/ `<li class="trip-events__item">
@@ -142,7 +142,7 @@ function createEventEditTemplate(event, destinations, offers) {
 }
 
 export default class EventEditView extends AbstractStatefulView {
-
+  #datepicker = null;
   #destinations = null;
   #offers = null;
   #handleFormSubmit = null;
@@ -164,6 +164,15 @@ export default class EventEditView extends AbstractStatefulView {
 
   get template() {
     return createEventEditTemplate(this._state, this.#destinations, this.#offers);
+  }
+
+  removeElement() {
+    super.removeElement();
+
+    if (this.#datepicker) {
+      this.#datepicker.destroy();
+      this.#datepicker = null;
+    }
   }
 
   reset(event) {
@@ -196,6 +205,8 @@ export default class EventEditView extends AbstractStatefulView {
 
     this.element.querySelectorAll('.event__input--time')
       .forEach((date) => date.addEventListener('change', this.#dateChangeHandler));
+
+    this.#setDatepicker();
   }
 
   #rollupButtonClickHandler = (evt) => {
@@ -255,16 +266,35 @@ export default class EventEditView extends AbstractStatefulView {
   #dateChangeHandler = (evt) => {
     evt.preventDefault();
     if (evt.target.name === 'event-start-time') {
-      this._setState({
+      this.updateElement({ // вызываем updateElement для перерисовки элемента
         dateFrom: parseDateFromEditFormat(evt.target.value),
+        dateTo: parseDateFromEditFormat(evt.target.value)
       });
     } else {
-      this._setState({
+      this.updateElement({ // вызываем updateElement для перерисовки элемента
         dateTo: parseDateFromEditFormat(evt.target.value),
       });
-      // КАК РЕАЛИЗОВАТЬ ПРОВЕРКУ? ЕСЛИ ДАТА НЕКОРРЕКТНАЯ (введена не полностью), ТО НЕЛЬЗЯ СОХРАНИТЬ ОКНО: isSubmitDisabled СТАНОВИТСЯ TRUE
     }
   };
+
+  #setDatepicker() {
+    const dateInputs = this.element.querySelectorAll('.event__input--time');
+
+    this.#datepicker = dateInputs.forEach((dateinput) => {
+      let minDate = null;
+      if (dateinput === dateInputs[1]) {
+        minDate = dateInputs[0].value;
+      }
+
+      flatpickr(dateinput,
+        {
+          dateFormat: 'd/m/y H:i',
+          enableTime: true,
+          time_24hr: true, // eslint-disable-line
+          minDate: minDate
+        });
+    });
+  }
 
   static parseEventToState(event) { // ! пометка чтобы не забыть: как пользоваться этими штуками
     return {...event}; // ! показано в коммите 6.1.1
