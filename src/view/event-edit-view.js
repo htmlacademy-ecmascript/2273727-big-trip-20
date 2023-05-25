@@ -1,6 +1,9 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { humanizeDateForEdit, parseDateFromEditFormat } from '../utils/event.js';
 import { WAYPOINT_TYPES, DESTINATIONS_NAMES } from '../const.js';
+import flatpickr from 'flatpickr';
+
+import 'flatpickr/dist/flatpickr.min.css';
 
 const BLANK_EVENT = {
   id: '',
@@ -140,7 +143,6 @@ function createEventEditTemplate(event, destinations, offers) {
 
 export default class EventEditView extends AbstractStatefulView {
 
-  #destination = null;
   #destinations = null;
   #offers = null;
   #handleFormSubmit = null;
@@ -152,7 +154,6 @@ export default class EventEditView extends AbstractStatefulView {
     this._setState(EventEditView.parseEventToState(event));
 
     this.#destinations = destinations;
-    this.#destination = this.#destinations.find((dstntn) => dstntn.id === event.destination);
     this.#offers = offers;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleRollupButtonClick = onRollupButtonClick;
