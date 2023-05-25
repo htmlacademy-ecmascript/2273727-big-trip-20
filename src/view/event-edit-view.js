@@ -191,8 +191,8 @@ export default class EventEditView extends AbstractStatefulView {
     this.element.querySelector('.event__reset-btn')
       .addEventListener('click', this.#cancelClickHandler);
 
-    this.element.querySelectorAll('.event__type-input')
-      .forEach((input) => input.addEventListener('change', this.#typeChangeHandler));
+    this.element.querySelector('.event__type-group')
+      .addEventListener('change', this.#typeChangeHandler);
 
     this.element.querySelector('.event__input--destination')
       .addEventListener('change', this.#destinationChangeHandler);
@@ -266,12 +266,12 @@ export default class EventEditView extends AbstractStatefulView {
   #dateChangeHandler = (evt) => {
     evt.preventDefault();
     if (evt.target.name === 'event-start-time') {
-      this.updateElement({ // вызываем updateElement для перерисовки элемента
+      this.updateElement({
         dateFrom: parseDateFromEditFormat(evt.target.value),
         dateTo: parseDateFromEditFormat(evt.target.value)
       });
     } else {
-      this.updateElement({ // вызываем updateElement для перерисовки элемента
+      this.updateElement({
         dateTo: parseDateFromEditFormat(evt.target.value),
       });
     }
@@ -290,7 +290,7 @@ export default class EventEditView extends AbstractStatefulView {
         {
           dateFormat: 'd/m/y H:i',
           enableTime: true,
-          time_24hr: true, // eslint-disable-line
+          'time_24hr': true,
           minDate: minDate
         });
     });
