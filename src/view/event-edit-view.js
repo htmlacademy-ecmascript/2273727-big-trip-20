@@ -36,7 +36,8 @@ const createTypesTemplate = (currentType) => WAYPOINT_TYPES.map((type) => `
 
 const createDestinationsTemplate = () => DESTINATIONS_NAMES.map((destination) => `<option value="${destination}"></option>`);
 
-function createEventEditTemplate(event, destinations, offers) {
+function createEventEditTemplate(state, destinations, offers) {
+  const {event} = state;
   const {basePrice, dateFrom, dateTo, type} = event;
   const dateFromFull = humanizeDateForEdit(dateFrom);
   const dateToFull = humanizeDateForEdit(dateTo);
@@ -151,7 +152,7 @@ export default class EventEditView extends AbstractStatefulView {
 
   constructor({event = BLANK_EVENT, destinations, offers, onFormSubmit, onRollupButtonClick, onCancelClick}) {
     super();
-    this._setState(EventEditView.parseEventToState(event));
+    this._setState(EventEditView.parseEventToState({event}));
 
     this.#destinations = destinations;
     this.#offers = offers;
@@ -175,11 +176,7 @@ export default class EventEditView extends AbstractStatefulView {
     }
   }
 
-  reset(event) {
-    this.updateElement(
-      EventEditView.parseEventToState(event),
-    );
-  }
+  reset = (event) => this.updateElement({event});
 
   _restoreHandlers() {
     this.element.querySelector('form')
@@ -227,7 +224,10 @@ export default class EventEditView extends AbstractStatefulView {
   #typeChangeHandler = (evt) => {
     evt.preventDefault();
     this.updateElement({ // здесь мы обновляем стейт и рендерим элемент уже на основании обновленного стейта
-      type: evt.target.value,
+      event: {
+        ...this._state.event,
+        type: evt.target.value,
+      }
     });
   };
 
@@ -236,7 +236,10 @@ export default class EventEditView extends AbstractStatefulView {
     const dstntn = this.#destinations.find((destination) => destination.name === evt.target.value);
     if (dstntn) {
       this.updateElement({
-        destination: dstntn.id,
+        event: {
+          ...this._state.event,
+          destination: dstntn.id,
+        }
       });
     }
   };
@@ -244,21 +247,30 @@ export default class EventEditView extends AbstractStatefulView {
   #priceChangeHandler = (evt) => {
     evt.preventDefault();
     this._setState({
-      basePrice: evt.target.value,
+      event: {
+        ...this._state.event,
+        basePrice: evt.target.value,
+      }
     });
   };
 
   #offerChangeHandler = (evt) => {
     evt.preventDefault();
-    const { offers } = this._state;
+    const { offers } = this._state.event;
     if (evt.target.checked) {
       this._setState({
-        offers: [...offers, Number(evt.target.id)],
+        event: {
+          ...this._state.event,
+          offers: [...offers, Number(evt.target.id)],
+        }
       });
     } else {
       const updatedOffers = offers.filter((offer) => offer !== Number(evt.target.id));
       this._setState({
-        offers: updatedOffers,
+        event: {
+          ...this._state.event,
+          offers: updatedOffers,
+        }
       });
     }
   };
@@ -267,12 +279,18 @@ export default class EventEditView extends AbstractStatefulView {
     evt.preventDefault();
     if (evt.target.name === 'event-start-time') {
       this.updateElement({
-        dateFrom: parseDateFromEditFormat(evt.target.value),
-        dateTo: parseDateFromEditFormat(evt.target.value)
+        event: {
+          ...this._state.event,
+          dateFrom: parseDateFromEditFormat(evt.target.value),
+          dateTo: parseDateFromEditFormat(evt.target.value)
+        }
       });
     } else {
       this.updateElement({
-        dateTo: parseDateFromEditFormat(evt.target.value),
+        event: {
+          ...this._state.event,
+          dateTo: parseDateFromEditFormat(evt.target.value),
+        }
       });
     }
   };
@@ -296,12 +314,8 @@ export default class EventEditView extends AbstractStatefulView {
     });
   }
 
-  static parseEventToState(event) { // ! пометка чтобы не забыть: как пользоваться этими штуками
-    return {...event}; // ! показано в коммите 6.1.1
-  }
+  static parseEventToState = ({event}) => ({event}); // ! пометка чтобы не забыть: как пользоваться этими штуками показано в коммите 6.1.1
 
-  static parseStateToEvent(state) { // функции парсинга дополнить, когда будут "усложнения" - всякие isRepeating и тд
-    const event = {...state};
-    return event;
-  }
+  static parseStateToEvent = (state) => state.event; // ОБНОВИЛ ФУНКЦИЮ, ЧТОБЫ ОНА ХРАНИЛА РАЗНЫЕ ОБЪЕКТЫ С СОСТОЯНИЯМИ ВНУТРИ ОДНОГО СОСТОЯНИЯ
+  // функции парсинга дополнить, когда будут "усложнения" - всякие isRepeating и тд
 }
