@@ -1,8 +1,9 @@
+import Observable from '../framework/observable.js';
 import { getMockEvent, mockDestinations, mockOffers } from '../mock/mock-objects';
 
 const EVENTS_COUNT = 8;
 
-export default class EventsModel {
+export default class EventsModel extends Observable {
   #events = Array.from({length: EVENTS_COUNT}, getMockEvent);
 
   get events() {
