@@ -1,11 +1,11 @@
-import { render, RenderPosition } from '../framework/render.js';
+import {render, RenderPosition, remove} from '../framework/render.js';
 import PlanView from '../view/plan-view.js';
 import SortView from '../view/sort-view.js';
 import EventsListView from '../view/events-list-view.js';
 import NoEventView from '../view/no-event-view.js';
 import EventPresenter from './event-presenter.js';
-import { SortType } from '../const.js';
-import { sortByDay, sortByTime, sortByPrice } from '../utils/event.js';
+import {SortType, UpdateType, UserAction} from '../const.js';
+import {sortByDay, sortByTime, sortByPrice} from '../utils/event.js';
 
 export default class PlanPresenter {
   #planContainer = null;
@@ -22,6 +22,8 @@ export default class PlanPresenter {
   constructor({planContainer, eventsModel}) {
     this.#planContainer = planContainer;
     this.#eventsModel = eventsModel;
+
+    this.#eventsModel.addObserver(this.#handleModelEvent);
   }
 
   get events() {
@@ -53,9 +55,34 @@ export default class PlanPresenter {
     this.#eventPresenters.forEach((presenter) => presenter.resetView());
   };
 
-  #handleEventChange = (updatedEvent) => {
+  #handleViewAction = (actionType, updateType, update) => {
+    switch(actionType) {
+      case UserAction.UPDATE_EVENT:
+        this.#eventsModel.updateEvent(updateType, update);
+        break;
+      case UserAction.ADD_EVENT:
+        this.#eventsModel.addEvent(updateType, update);
+        break;
+      case UserAction.DELETE_EVENT:
+        this.#eventsModel.deleteEvent(updateType, update);
+        break;
+    }
+  };
 
-    this.#eventPresenters.get(updatedEvent.id).init(updatedEvent);
+  #handleModelEvent = (updateType, data) => {
+    switch(updateType) {
+      case UpdateType.PATCH:
+        this.#eventPresenters.get(data.id).init(data);
+        break;
+      case UpdateType.MINOR:
+        this.#clearPlan();
+        this.#renderPlan();
+        break;
+      case UpdateType.MAJOR:
+        this.#clearPlan({resetSortType: true});
+        this.#renderPlan();
+        break;
+    }
   };
 
   #handleSortTypeChange = (sortType) => {
@@ -64,12 +91,13 @@ export default class PlanPresenter {
     }
 
     this.#currentSortType = sortType;
-    this.#clearEventsList();
-    this.#renderEventsList();
+    this.#clearPlan();
+    this.#renderPlan();
   };
 
   #renderSort() {
     this.#sortComponent = new SortView({
+      currentSortType: this.#currentSortType,
       onSortTypeChange: this.#handleSortTypeChange
     });
 
@@ -79,7 +107,7 @@ export default class PlanPresenter {
   #renderEvent({event, destinations, offers}) {
     const eventPresenter = new EventPresenter({
       eventsListContainer: this.#eventsListComponent.element,
-      onDataChange: this.#handleEventChange,
+      onDataChange: this.#handleViewAction,
       onModeChange: this.#handleModeChange,
       destinations, offers,
     });
@@ -111,6 +139,18 @@ export default class PlanPresenter {
 
     render(this.#eventsListComponent, this.#planComponent.element);
     this.#renderEvents(events, destinations, offers);
+  }
+
+  #clearPlan({resetSortType = false} = {}) {
+    this.#eventPresenters.forEach((presenter) => presenter.destroy());
+    this.#eventPresenters.clear();
+
+    remove(this.#sortComponent);
+    remove(this.#noEventComponent);
+
+    if (resetSortType) {
+      this.#currentSortType = SortType.DAY;
+    }
   }
 
   #renderPlan() {
