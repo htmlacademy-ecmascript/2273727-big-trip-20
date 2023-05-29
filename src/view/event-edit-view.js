@@ -223,7 +223,7 @@ export default class EventEditView extends AbstractStatefulView {
 
   #typeChangeHandler = (evt) => {
     evt.preventDefault();
-    this.updateElement({ // здесь мы обновляем стейт и рендерим элемент уже на основании обновленного стейта
+    this.updateElement({
       event: {
         ...this._state.event,
         type: evt.target.value,

@@ -4,7 +4,6 @@ import SortView from '../view/sort-view.js';
 import EventsListView from '../view/events-list-view.js';
 import NoEventView from '../view/no-event-view.js';
 import EventPresenter from './event-presenter.js';
-import { updateItem } from '../utils/common.js';
 import { SortType } from '../const.js';
 import { sortByDay, sortByTime, sortByPrice } from '../utils/event.js';
 
@@ -17,10 +16,6 @@ export default class PlanPresenter {
   #sortComponent = null;
   #noEventComponent = new NoEventView();
 
-  #events = [];
-  #destinations = [];
-  #offers = [];
-
   #eventPresenters = new Map();
   #currentSortType = SortType.DAY;
 
@@ -30,6 +25,15 @@ export default class PlanPresenter {
   }
 
   get events() {
+    switch (this.#currentSortType) {
+      case SortType.DAY:
+        return [...this.#eventsModel.events].sort(sortByDay);
+      case SortType.TIME:
+        return [...this.#eventsModel.events].sort(sortByTime);
+      case SortType.PRICE:
+        return [...this.#eventsModel.events].sort(sortByPrice);
+    }
+
     return this.#eventsModel.events;
   }
 
@@ -42,10 +46,6 @@ export default class PlanPresenter {
   }
 
   init() {
-    this.#events = [...this.#eventsModel.events];
-    this.#destinations = [...this.#eventsModel.destinations];
-    this.#offers = [...this.#eventsModel.offers];
-
     this.#renderPlan();
   }
 
@@ -54,31 +54,16 @@ export default class PlanPresenter {
   };
 
   #handleEventChange = (updatedEvent) => {
-    this.#events = updateItem(this.#events, updatedEvent);
+
     this.#eventPresenters.get(updatedEvent.id).init(updatedEvent);
   };
-
-  #sortEvents(sortType) {
-    switch (sortType) {
-      case SortType.DAY:
-        this.#events.sort(sortByDay);
-        break;
-      case SortType.TIME:
-        this.#events.sort(sortByTime);
-        break;
-      case SortType.PRICE:
-        this.#events.sort(sortByPrice);
-        break;
-    }
-    this.#currentSortType = sortType;
-  }
 
   #handleSortTypeChange = (sortType) => {
     if (this.#currentSortType === sortType) {
       return;
     }
 
-    this.#sortEvents(sortType);
+    this.#currentSortType = sortType;
     this.#clearEventsList();
     this.#renderEventsList();
   };
@@ -91,24 +76,23 @@ export default class PlanPresenter {
     render(this.#sortComponent, this.#planComponent.element, RenderPosition.AFTERBEGIN);
   }
 
-  #renderEvent({event, destination, destinations, offers}) {
+  #renderEvent({event, destinations, offers}) {
     const eventPresenter = new EventPresenter({
       eventsListContainer: this.#eventsListComponent.element,
       onDataChange: this.#handleEventChange,
       onModeChange: this.#handleModeChange,
-      destination, destinations, offers,
+      destinations, offers,
     });
     eventPresenter.init(event);
     this.#eventPresenters.set(event.id, eventPresenter);
   }
 
-  #renderEvents() {
-    this.#events
+  #renderEvents(events, destinations, offers) {
+    events
       .forEach((event) => this.#renderEvent({
         event,
-        destination: this.#destinations.find((dstntn) => dstntn.id === event.destination),
-        destinations: this.#destinations,
-        offers: this.#offers}));
+        destinations: destinations,
+        offers: offers}));
   }
 
   #renderNoEvents() {
@@ -121,14 +105,18 @@ export default class PlanPresenter {
   }
 
   #renderEventsList() {
+    const events = this.events;
+    const destinations = this.destinations;
+    const offers = this.offers;
+
     render(this.#eventsListComponent, this.#planComponent.element);
-    this.#renderEvents();
+    this.#renderEvents(events, destinations, offers);
   }
 
   #renderPlan() {
     render(this.#planComponent, this.#planContainer);
 
-    if (!this.#events) {
+    if (!this.events) {
       this.#renderNoEvents();
       return;
     }
