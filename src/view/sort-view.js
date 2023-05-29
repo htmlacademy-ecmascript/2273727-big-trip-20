@@ -55,6 +55,7 @@ export default class SortView extends AbstractView {
 
     if (evt.target.dataset.sortType === 'event' || evt.target.dataset.sortType === 'offer') {
       evt.preventDefault();
+      return;
     }
 
     this.#handleSortTypeChange(evt.target.dataset.sortType);

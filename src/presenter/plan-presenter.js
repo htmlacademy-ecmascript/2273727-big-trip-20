@@ -127,11 +127,6 @@ export default class PlanPresenter {
     render(this.#noEventComponent, this.#planComponent.element, RenderPosition.AFTERBEGIN);
   }
 
-  #clearEventsList() {
-    this.#eventPresenters.forEach((presenter) => presenter.destroy());
-    this.#eventPresenters.clear();
-  }
-
   #renderEventsList() {
     const events = this.events;
     const destinations = this.destinations;
