@@ -105,8 +105,7 @@ export default class EventPresenter {
   };
 
   #handleCancelClick = () => {
-    this.#eventEditComponent.reset(this.#event);
-    this.#replaceRedactorToEvent();
+    remove(this.#eventEditComponent);
   };
 
   #handleDeleteClick = (event) => {

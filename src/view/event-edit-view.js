@@ -197,7 +197,7 @@ export default class EventEditView extends AbstractStatefulView {
         break;
       case false:
         resetButton.addEventListener('click', this.#deleteClickHandler);
-        break; // вот здесь похоже свитчи лишние. Карточка в любом же случае будет грохаться
+        break;
     }
 
     this.element.querySelector('.event__type-group')
