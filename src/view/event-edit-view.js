@@ -66,6 +66,14 @@ function createEventEditTemplate(state, destinations, offers) {
 
   const isSubmitDisabled = false; // УДАЛИТЬ ЕСЛИ ТАК И НЕ ПОНАДОБИТСЯ
 
+  const isEventNew = false;
+
+  const buttonsTemplate = isEventNew ? `
+    <button class="event__reset-btn" type="reset">Cancel</button>` : `
+    <button class="event__reset-btn" type="reset">Delete</button>
+    <button class="event__rollup-btn" type="button"><span class="visually-hidden">Open event</span></button>
+  `;
+
   return (
     /*html*/ `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -112,10 +120,7 @@ function createEventEditTemplate(state, destinations, offers) {
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled ? 'disabled' : ''}>Save</button>
-        <button class="event__reset-btn" type="reset">Cancel</button>
-        <button class="event__rollup-btn" type="button">
-          <span class="visually-hidden">Open event</span>
-        </button>
+        ${buttonsTemplate}
       </header>
       <section class="event__details">
         <section class="event__section  event__section--offers">
@@ -143,14 +148,15 @@ function createEventEditTemplate(state, destinations, offers) {
 }
 
 export default class EventEditView extends AbstractStatefulView {
-  #datepicker = null;
+  #datepickers = null;
   #destinations = null;
   #offers = null;
   #handleFormSubmit = null;
   #handleRollupButtonClick = null;
   #handleCancelClick = null;
+  #handleDeleteClick = null;
 
-  constructor({event = BLANK_EVENT, destinations, offers, onFormSubmit, onRollupButtonClick, onCancelClick}) {
+  constructor({event = BLANK_EVENT, destinations, offers, onFormSubmit, onRollupButtonClick, onCancelClick, onDeleteClick}) {
     super();
     this._setState(EventEditView.parseEventToState({event}));
 
@@ -159,6 +165,7 @@ export default class EventEditView extends AbstractStatefulView {
     this.#handleFormSubmit = onFormSubmit;
     this.#handleRollupButtonClick = onRollupButtonClick;
     this.#handleCancelClick = onCancelClick;
+    this.#handleDeleteClick = onDeleteClick;
 
     this._restoreHandlers();
   }
@@ -169,11 +176,7 @@ export default class EventEditView extends AbstractStatefulView {
 
   removeElement() {
     super.removeElement();
-
-    if (this.#datepicker) {
-      this.#datepicker.destroy();
-      this.#datepicker = null;
-    }
+    this.#datepickers.forEach((datepicker) => datepicker.destroy());
   }
 
   reset = (event) => this.updateElement({event});
@@ -182,11 +185,20 @@ export default class EventEditView extends AbstractStatefulView {
     this.element.querySelector('form')
       .addEventListener('submit', this.#formSubmitHandler);
 
-    this.element.querySelector('.event__rollup-btn')
-      .addEventListener('click', this.#rollupButtonClickHandler);
+    const rollupButton = this.element.querySelector('.event__rollup-btn');
+    if (rollupButton) {
+      rollupButton.addEventListener('click', this.#rollupButtonClickHandler);
+    }
 
-    this.element.querySelector('.event__reset-btn')
-      .addEventListener('click', this.#cancelClickHandler);
+    const resetButton = this.element.querySelector('.event__reset-btn');
+    switch(false) {
+      case true:
+        resetButton.addEventListener('click', this.#cancelClickHandler);
+        break;
+      case false:
+        resetButton.addEventListener('click', this.#deleteClickHandler);
+        break; // вот здесь похоже свитчи лишние. Карточка в любом же случае будет грохаться
+    }
 
     this.element.querySelector('.event__type-group')
       .addEventListener('change', this.#typeChangeHandler);
@@ -214,6 +226,11 @@ export default class EventEditView extends AbstractStatefulView {
   #cancelClickHandler = (evt) => {
     evt.preventDefault();
     this.#handleCancelClick();
+  };
+
+  #deleteClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleDeleteClick(EventEditView.parseStateToEvent(this._state));
   };
 
   #formSubmitHandler = (evt) => {
@@ -298,18 +315,15 @@ export default class EventEditView extends AbstractStatefulView {
   #setDatepicker() {
     const dateInputs = this.element.querySelectorAll('.event__input--time');
 
-    this.#datepicker = dateInputs.forEach((dateinput) => {
-      let minDate = null;
-      if (dateinput === dateInputs[1]) {
-        minDate = dateInputs[0].value;
-      }
+    this.#datepickers = [...dateInputs].map((dateinput, id) => {
+      const minDate = id ? dateInputs[0].value : null;
 
-      flatpickr(dateinput,
+      return flatpickr(dateinput,
         {
           dateFormat: 'd/m/y H:i',
           enableTime: true,
           'time_24hr': true,
-          minDate: minDate
+          minDate,
         });
     });
   }

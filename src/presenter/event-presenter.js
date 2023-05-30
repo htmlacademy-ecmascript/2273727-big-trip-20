@@ -51,6 +51,7 @@ export default class EventPresenter {
       onFormSubmit: this.#handleFormSubmit,
       onRollupButtonClick: this.#handleRollupButtonClick,
       onCancelClick: this.#handleCancelClick,
+      onDeleteClick: this.#handleDeleteClick,
     });
 
     if (prevEventComponent === null || prevEventEditComponent === null) {
@@ -106,6 +107,14 @@ export default class EventPresenter {
   #handleCancelClick = () => {
     this.#eventEditComponent.reset(this.#event);
     this.#replaceRedactorToEvent();
+  };
+
+  #handleDeleteClick = (event) => {
+    this.#handleDataChange(
+      UserAction.DELETE_EVENT,
+      UpdateType.MINOR,
+      event,
+    );
   };
 
   #handleEditClick = () => {

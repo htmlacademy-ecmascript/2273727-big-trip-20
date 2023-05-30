@@ -151,7 +151,7 @@ export default class PlanPresenter {
   #renderPlan() {
     render(this.#planComponent, this.#planContainer);
 
-    if (!this.events) {
+    if (this.events.length === 0) {
       this.#renderNoEvents();
       return;
     }
