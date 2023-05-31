@@ -133,8 +133,11 @@ export default class PlanPresenter {
   }
 
   #renderNoEvents() {
+    const events = this.#eventsModel.events;
+    const isEmpty = (events.length === 0);
     this.#noEventComponent = new NoEventView({
-      filterType: this.#filterType
+      filterType: this.#filterType,
+      isEmpty,
     });
 
     render(this.#noEventComponent, this.#planComponent.element, RenderPosition.AFTERBEGIN);
