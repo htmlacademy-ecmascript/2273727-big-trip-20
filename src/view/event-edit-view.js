@@ -1,5 +1,5 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import { humanizeDateForEdit, parseDateFromEditFormat } from '../utils/event.js';
+import { humanizeDateForEdit, parseDateFromEditFormat, capitalizeFirstLetter } from '../utils/event.js';
 import { WAYPOINT_TYPES, DESTINATIONS_NAMES } from '../const.js';
 import flatpickr from 'flatpickr';
 
@@ -30,7 +30,7 @@ const createTypesTemplate = (currentType) => WAYPOINT_TYPES.map((type) => `
       <label
         class="event__type-label  event__type-label--${type}"
         for="event-type-${type}-1"
-      >${type}</label>
+      >${capitalizeFirstLetter(type)}</label>
     </div>
   `).join('');
 
@@ -244,6 +244,7 @@ export default class EventEditView extends AbstractStatefulView {
       event: {
         ...this._state.event,
         type: evt.target.value,
+        offers: [],
       }
     });
   };
