@@ -4,6 +4,7 @@ import SortView from '../view/sort-view.js';
 import EventsListView from '../view/events-list-view.js';
 import NoEventView from '../view/no-event-view.js';
 import EventPresenter from './event-presenter.js';
+import NewEventPresenter from './new-event-presenter.js';
 import {SortType, UpdateType, UserAction, FilterType} from '../const.js';
 import {sortByDay, sortByTime, sortByPrice} from '../utils/event.js';
 import {filter} from '../utils/filter.js';
@@ -19,13 +20,20 @@ export default class PlanPresenter {
   #noEventComponent = null;
 
   #eventPresenters = new Map();
+  #newEventPresenter = null;
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
 
-  constructor({planContainer, eventsModel, filterModel}) {
+  constructor({planContainer, eventsModel, filterModel, onNewEventDestroy}) {
     this.#planContainer = planContainer;
     this.#eventsModel = eventsModel;
     this.#filterModel = filterModel;
+
+    this.#newEventPresenter = new NewEventPresenter({
+      eventsListContainer: this.#eventsListComponent.element,
+      onDataChange: this.#handleViewAction,
+      onDestroy: onNewEventDestroy,
+    });
 
     this.#eventsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
@@ -60,7 +68,14 @@ export default class PlanPresenter {
     this.#renderPlan();
   }
 
+  createEvent() {
+    this.#currentSortType = SortType.DAY;
+    this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this.#newEventPresenter.init();
+  }
+
   #handleModeChange = () => {
+    this.#newEventPresenter.destroy();
     this.#eventPresenters.forEach((presenter) => presenter.resetView());
   };
 
@@ -153,6 +168,7 @@ export default class PlanPresenter {
   }
 
   #clearPlan({resetSortType = false} = {}) {
+    this.#newEventPresenter.destroy();
     this.#eventPresenters.forEach((presenter) => presenter.destroy());
     this.#eventPresenters.clear();
 

@@ -17,6 +17,7 @@ const planPresenter = new PlanPresenter({
   planContainer,
   eventsModel,
   filterModel,
+  onNewEventDestroy: handleNewEventFormClose,
 });
 
 const infoPresenter = new InfoPresenter({
@@ -30,8 +31,22 @@ const filterPresenter = new FilterPresenter({
   eventsModel,
 });
 
+const newEventButtonComponent = new NewEventButtonView({
+  onClick: handleNewEventButtonClick,
+});
+
+function handleNewEventFormClose() {
+  newEventButtonComponent.element.disabled = false;
+}
+
+function handleNewEventButtonClick() {
+  planPresenter.createEvent();
+  newEventButtonComponent.element.disabled = true;
+}
+
+render(newEventButtonComponent, tripMainContainer);
+
 infoPresenter.init();
 filterPresenter.init();
 planPresenter.init();
 
-render(new NewEventButtonView(), tripMainContainer);
