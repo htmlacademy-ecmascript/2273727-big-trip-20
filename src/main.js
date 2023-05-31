@@ -14,7 +14,9 @@ const filterModel = new FilterModel();
 
 const planPresenter = new PlanPresenter({
   planContainer,
-  eventsModel});
+  eventsModel,
+  filterModel,
+});
 
 const infoPresenter = new InfoPresenter({
   infoContainer: tripMainContainer,
