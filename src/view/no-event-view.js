@@ -8,25 +8,21 @@ const NoEventTextType = {
   [FilterType.FUTURE]: 'There are no future events now',
 };
 
-function createNoEventTemplate(filterType, isEmpty) {
-  let noEventText = NoEventTextType[filterType];
-  if (isEmpty) {
-    noEventText = NoEventTextType[FilterType.EVERYTHING];
-  }
+function createNoEventTemplate(filterType) {
+  const noEventText = NoEventTextType[filterType];
   return /*HTML*/ `<p class="trip-events__msg">${noEventText}</p>`;
 }
 
 export default class NoEventView extends AbstractView {
   #filterType = null;
-  #isEmpty = null;
 
   constructor({filterType, isEmpty}) {
     super();
-    this.#filterType = filterType;
-    this.#isEmpty = isEmpty;
+    this.#filterType = isEmpty ? FilterType.EVERYTHING : filterType;
+
   }
 
   get template() {
-    return createNoEventTemplate(this.#filterType, this.#isEmpty);
+    return createNoEventTemplate(this.#filterType);
   }
 }
