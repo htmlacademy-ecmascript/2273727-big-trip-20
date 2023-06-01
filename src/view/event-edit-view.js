@@ -264,7 +264,7 @@ function createEventEditTemplate(state, destinations, offers) {
 
   const typesTemplate = createTypesTemplate(type);
 
-  const isEventNew = false;
+  const isEventNew = !state.event.id;
 
   const buttonsTemplate = isEventNew ? `
     <button class="event__reset-btn" type="reset">Cancel</button>` : `
