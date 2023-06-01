@@ -2,21 +2,221 @@ import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { humanizeDateForEdit, parseDateFromEditFormat, capitalizeFirstLetter } from '../utils/event.js';
 import { WAYPOINT_TYPES, DESTINATIONS_NAMES } from '../const.js';
 import flatpickr from 'flatpickr';
+import {getRandomArrayElement, getRandomInteger} from '../utils/common.js';
+import {DESTINATIONS_DESCRIPTIONS} from '../const.js';
 
 import 'flatpickr/dist/flatpickr.min.css';
 
-const BLANK_EVENT = {
+const DEFAULT_EVENT = {
   id: '',
   basePrice: null,
   dateFrom: '',
   dateTo: '',
-  destination: '',
+  destination: 1,
   isFavorite: false,
-  offers: [
-    ''
-  ],
+  offers: [],
   type: 'taxi'
 };
+
+const DEFAULT_DESTINATION = [{
+  id: 1,
+  description: getRandomArrayElement(DESTINATIONS_DESCRIPTIONS),
+  name: 'Paris',
+  pictures: Array.from({length: getRandomInteger(1, 5)}, () => ({
+    src: `https://loremflickr.com/248/152?random=${getRandomInteger(1,30)}`,
+    description: getRandomArrayElement(DESTINATIONS_DESCRIPTIONS)
+  }))
+},
+{
+  id: 2,
+  description: getRandomArrayElement(DESTINATIONS_DESCRIPTIONS),
+  name: 'New York',
+  pictures: Array.from({length: getRandomInteger(1, 5)}, () => ({
+    src: `https://loremflickr.com/248/152?random=${getRandomInteger(1,30)}`,
+    description: getRandomArrayElement(DESTINATIONS_DESCRIPTIONS)
+  }))
+},
+{
+  id: 3,
+  description: getRandomArrayElement(DESTINATIONS_DESCRIPTIONS),
+  name: 'Moscow',
+  pictures: Array.from({length: getRandomInteger(1, 5)}, () => ({
+    src: `https://loremflickr.com/248/152?random=${getRandomInteger(1,30)}`,
+    description: getRandomArrayElement(DESTINATIONS_DESCRIPTIONS)
+  }))
+},
+{
+  id: 4,
+  description: getRandomArrayElement(DESTINATIONS_DESCRIPTIONS),
+  name: 'Warsaw',
+  pictures: Array.from({length: getRandomInteger(1, 5)}, () => ({
+    src: `https://loremflickr.com/248/152?random=${getRandomInteger(1,30)}`,
+    description: getRandomArrayElement(DESTINATIONS_DESCRIPTIONS)
+  }))
+}];
+
+const DEFAULT_OFFER = [
+  {
+    type: 'taxi',
+    offers: [
+      {
+        id: 1,
+        title: 'Upgrade to a business class',
+        price: 320
+      },
+      {
+        id: 2,
+        title: 'Can smoke',
+        price: 80
+      }
+    ]
+  },
+  {
+    type: 'bus',
+    offers: [
+      {
+        id: 1,
+        title: 'Upgrade to a higher class',
+        price: 50
+      },
+      {
+        id: 2,
+        title: 'Choose seats',
+        price: 60
+      },
+    ]
+  },
+  {
+    type: 'train',
+    offers: [
+      {
+        id: 1,
+        title: 'Upgrade to a higher class',
+        price: 100
+      },
+      {
+        id: 2,
+        title: 'Choose seats',
+        price: 90
+      },
+    ]
+  },
+  {
+    type: 'ship',
+    offers: [
+      {
+        id: 1,
+        title: 'Upgrade to a business class',
+        price: 120
+      },
+      {
+        id: 2,
+        title: 'Switch seats',
+        price: 80
+      },
+      {
+        id: 3,
+        title: 'Add meal',
+        price: 100
+      }
+    ]
+  },
+  {
+    type: 'drive',
+    offers: [
+      {
+        id: 1,
+        title: 'Upgrade to a business class',
+        price: 120
+      },
+      {
+        id: 2,
+        title: 'Add music',
+        price: 180
+      },
+      {
+        id: 3,
+        title: 'Add additional stop',
+        price: 200
+      }
+    ]
+  },
+  {
+    type: 'flight',
+    offers: [
+      {
+        id: 1,
+        title: 'Upgrade to a business class',
+        price: 120
+      },
+      {
+        id: 2,
+        title: 'Switch seats',
+        price: 80
+      },
+      {
+        id: 3,
+        title: 'Add meal',
+        price: 100
+      }
+    ]
+  },
+  {
+    type: 'check-in',
+    offers: [
+      {
+        id: 1,
+        title: 'Add more room',
+        price: 250
+      },
+      {
+        id: 2,
+        title: 'Upgrade to a higher class',
+        price: 400
+      },
+      {
+        id: 3,
+        title: 'Add breakfast',
+        price: 50
+      },
+      {
+        id: 4,
+        title: 'Add cleaning',
+        price: 150
+      }
+    ]
+  },
+  {
+    type: 'sightseeing',
+    offers: [
+      {
+        id: 1,
+        title: 'Upgrade to a business class',
+        price: 120
+      },
+      {
+        id: 2,
+        title: 'Switch seats',
+        price: 80
+      },
+    ]
+  },
+  {
+    type: 'restaurant',
+    offers: [
+      {
+        id: 1,
+        title: 'Add Michelenne Star',
+        price: 300
+      },
+      {
+        id: 2,
+        title: 'Add More Michelenne Star',
+        price: 500
+      }
+    ]
+  }
+];
 
 const createTypesTemplate = (currentType) => WAYPOINT_TYPES.map((type) => `
     <div class="event__type-item">
@@ -42,9 +242,9 @@ function createEventEditTemplate(state, destinations, offers) {
   const dateFromFull = humanizeDateForEdit(dateFrom);
   const dateToFull = humanizeDateForEdit(dateTo);
   const destination = destinations.find((dstntn) => dstntn.id === event.destination);
-  const picturesList = destination.pictures
+  const picturesList = destination.pictures ? destination.pictures
     .map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`)
-    .join('');
+    .join('') : '';
 
   const isChecked = (offer) => event.offers.includes(offer.id) ? 'checked' : '';
 
@@ -63,8 +263,6 @@ function createEventEditTemplate(state, destinations, offers) {
     .join('');
 
   const typesTemplate = createTypesTemplate(type);
-
-  const isSubmitDisabled = false; // УДАЛИТЬ ЕСЛИ ТАК И НЕ ПОНАДОБИТСЯ
 
   const isEventNew = false;
 
@@ -116,10 +314,10 @@ function createEventEditTemplate(state, destinations, offers) {
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${basePrice}">
+          <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${basePrice}" required>
         </div>
 
-        <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled ? 'disabled' : ''}>Save</button>
+        <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
         ${buttonsTemplate}
       </header>
       <section class="event__details">
@@ -156,7 +354,7 @@ export default class EventEditView extends AbstractStatefulView {
   #handleCancelClick = null;
   #handleDeleteClick = null;
 
-  constructor({event = BLANK_EVENT, destinations, offers, onFormSubmit, onRollupButtonClick, onCancelClick, onDeleteClick}) {
+  constructor({event = DEFAULT_EVENT, destinations = DEFAULT_DESTINATION, offers = DEFAULT_OFFER, onFormSubmit, onRollupButtonClick, onCancelClick, onDeleteClick}) {
     super();
     this._setState(EventEditView.parseEventToState({event}));
 
@@ -318,13 +516,13 @@ export default class EventEditView extends AbstractStatefulView {
 
     this.#datepickers = [...dateInputs].map((dateinput, id) => {
       const minDate = id ? dateInputs[0].value : null;
-
       return flatpickr(dateinput,
         {
           dateFormat: 'd/m/y H:i',
           enableTime: true,
           'time_24hr': true,
           minDate,
+          allowInput:true,
         });
     });
   }
