@@ -8,7 +8,6 @@ import {DESTINATIONS_DESCRIPTIONS} from '../const.js';
 import 'flatpickr/dist/flatpickr.min.css';
 
 const DEFAULT_EVENT = {
-  id: '',
   basePrice: null,
   dateFrom: '',
   dateTo: '',
@@ -263,7 +262,6 @@ function createEventEditTemplate(state, destinations, offers) {
     .join('');
 
   const typesTemplate = createTypesTemplate(type);
-
   const isEventNew = !state.event.id;
 
   const buttonsTemplate = isEventNew ? `
