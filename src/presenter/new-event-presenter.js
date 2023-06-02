@@ -63,12 +63,15 @@ export default class NewEventPresenter {
 
   #handleDeleteClick = () => {
     this.destroy();
+    // вызов отрисовки noEventView
+
   };
 
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
       this.destroy();
+      // вызов отрисовки noEventView
     }
   };
 }
