@@ -10,10 +10,16 @@ export default class NewEventPresenter {
 
   #eventEditComponent = null;
 
-  constructor({eventsListContainer, onDataChange, onDestroy}) {
+  #destinations = null;
+  #offers = null;
+
+  constructor({eventsListContainer, onDataChange, onDestroy, destinations, offers}) {
     this.#eventsListContainer = eventsListContainer;
     this.#handleDataChange = onDataChange;
     this.#handleDestroy = onDestroy;
+
+    this.#destinations = destinations;
+    this.#offers = offers;
   }
 
   init() {
@@ -23,7 +29,9 @@ export default class NewEventPresenter {
 
     this.#eventEditComponent = new EventEditView({
       onFormSubmit: this.#handleFormSubmit,
-      onDeleteClick: this.#handleDeleteClick
+      onDeleteClick: this.#handleDeleteClick,
+      destinations: this.#destinations,
+      offers: this.#offers,
     });
 
     render(this.#eventEditComponent, this.#eventsListContainer, RenderPosition.AFTERBEGIN);

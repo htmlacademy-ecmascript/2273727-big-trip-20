@@ -2,9 +2,6 @@ import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { humanizeDateForEdit, parseDateFromEditFormat, capitalizeFirstLetter } from '../utils/event.js';
 import { WAYPOINT_TYPES, DESTINATIONS_NAMES } from '../const.js';
 import flatpickr from 'flatpickr';
-import {getRandomArrayElement, getRandomInteger} from '../utils/common.js';
-import {DESTINATIONS_DESCRIPTIONS} from '../const.js';
-
 import 'flatpickr/dist/flatpickr.min.css';
 
 const DEFAULT_EVENT = {
@@ -16,206 +13,6 @@ const DEFAULT_EVENT = {
   offers: [],
   type: 'taxi'
 };
-
-const DEFAULT_DESTINATION = [{
-  id: 1,
-  description: getRandomArrayElement(DESTINATIONS_DESCRIPTIONS),
-  name: 'Paris',
-  pictures: Array.from({length: getRandomInteger(1, 5)}, () => ({
-    src: `https://loremflickr.com/248/152?random=${getRandomInteger(1,30)}`,
-    description: getRandomArrayElement(DESTINATIONS_DESCRIPTIONS)
-  }))
-},
-{
-  id: 2,
-  description: getRandomArrayElement(DESTINATIONS_DESCRIPTIONS),
-  name: 'New York',
-  pictures: Array.from({length: getRandomInteger(1, 5)}, () => ({
-    src: `https://loremflickr.com/248/152?random=${getRandomInteger(1,30)}`,
-    description: getRandomArrayElement(DESTINATIONS_DESCRIPTIONS)
-  }))
-},
-{
-  id: 3,
-  description: getRandomArrayElement(DESTINATIONS_DESCRIPTIONS),
-  name: 'Moscow',
-  pictures: Array.from({length: getRandomInteger(1, 5)}, () => ({
-    src: `https://loremflickr.com/248/152?random=${getRandomInteger(1,30)}`,
-    description: getRandomArrayElement(DESTINATIONS_DESCRIPTIONS)
-  }))
-},
-{
-  id: 4,
-  description: getRandomArrayElement(DESTINATIONS_DESCRIPTIONS),
-  name: 'Warsaw',
-  pictures: Array.from({length: getRandomInteger(1, 5)}, () => ({
-    src: `https://loremflickr.com/248/152?random=${getRandomInteger(1,30)}`,
-    description: getRandomArrayElement(DESTINATIONS_DESCRIPTIONS)
-  }))
-}];
-
-const DEFAULT_OFFER = [
-  {
-    type: 'taxi',
-    offers: [
-      {
-        id: 1,
-        title: 'Upgrade to a business class',
-        price: 320
-      },
-      {
-        id: 2,
-        title: 'Can smoke',
-        price: 80
-      }
-    ]
-  },
-  {
-    type: 'bus',
-    offers: [
-      {
-        id: 1,
-        title: 'Upgrade to a higher class',
-        price: 50
-      },
-      {
-        id: 2,
-        title: 'Choose seats',
-        price: 60
-      },
-    ]
-  },
-  {
-    type: 'train',
-    offers: [
-      {
-        id: 1,
-        title: 'Upgrade to a higher class',
-        price: 100
-      },
-      {
-        id: 2,
-        title: 'Choose seats',
-        price: 90
-      },
-    ]
-  },
-  {
-    type: 'ship',
-    offers: [
-      {
-        id: 1,
-        title: 'Upgrade to a business class',
-        price: 120
-      },
-      {
-        id: 2,
-        title: 'Switch seats',
-        price: 80
-      },
-      {
-        id: 3,
-        title: 'Add meal',
-        price: 100
-      }
-    ]
-  },
-  {
-    type: 'drive',
-    offers: [
-      {
-        id: 1,
-        title: 'Upgrade to a business class',
-        price: 120
-      },
-      {
-        id: 2,
-        title: 'Add music',
-        price: 180
-      },
-      {
-        id: 3,
-        title: 'Add additional stop',
-        price: 200
-      }
-    ]
-  },
-  {
-    type: 'flight',
-    offers: [
-      {
-        id: 1,
-        title: 'Upgrade to a business class',
-        price: 120
-      },
-      {
-        id: 2,
-        title: 'Switch seats',
-        price: 80
-      },
-      {
-        id: 3,
-        title: 'Add meal',
-        price: 100
-      }
-    ]
-  },
-  {
-    type: 'check-in',
-    offers: [
-      {
-        id: 1,
-        title: 'Add more room',
-        price: 250
-      },
-      {
-        id: 2,
-        title: 'Upgrade to a higher class',
-        price: 400
-      },
-      {
-        id: 3,
-        title: 'Add breakfast',
-        price: 50
-      },
-      {
-        id: 4,
-        title: 'Add cleaning',
-        price: 150
-      }
-    ]
-  },
-  {
-    type: 'sightseeing',
-    offers: [
-      {
-        id: 1,
-        title: 'Upgrade to a business class',
-        price: 120
-      },
-      {
-        id: 2,
-        title: 'Switch seats',
-        price: 80
-      },
-    ]
-  },
-  {
-    type: 'restaurant',
-    offers: [
-      {
-        id: 1,
-        title: 'Add Michelenne Star',
-        price: 300
-      },
-      {
-        id: 2,
-        title: 'Add More Michelenne Star',
-        price: 500
-      }
-    ]
-  }
-];
 
 const createTypesTemplate = (currentType) => WAYPOINT_TYPES.map((type) => `
     <div class="event__type-item">
@@ -301,10 +98,10 @@ function createEventEditTemplate(state, destinations, offers) {
 
         <div class="event__field-group  event__field-group--time">
           <label class="visually-hidden" for="event-start-time-1">From</label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateFromFull}">
+          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateFromFull}" required>
           &mdash;
           <label class="visually-hidden" for="event-end-time-1">To</label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dateToFull}">
+          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dateToFull}" required>
         </div>
 
         <div class="event__field-group  event__field-group--price">
@@ -352,7 +149,7 @@ export default class EventEditView extends AbstractStatefulView {
   #handleCancelClick = null;
   #handleDeleteClick = null;
 
-  constructor({event = DEFAULT_EVENT, destinations = DEFAULT_DESTINATION, offers = DEFAULT_OFFER, onFormSubmit, onRollupButtonClick, onCancelClick, onDeleteClick}) {
+  constructor({event = DEFAULT_EVENT, destinations, offers, onFormSubmit, onRollupButtonClick, onCancelClick, onDeleteClick}) {
     super();
     this._setState(EventEditView.parseEventToState({event}));
 
@@ -520,7 +317,7 @@ export default class EventEditView extends AbstractStatefulView {
           enableTime: true,
           'time_24hr': true,
           minDate,
-          allowInput:true,
+          allowInput: true,
         });
     });
   }

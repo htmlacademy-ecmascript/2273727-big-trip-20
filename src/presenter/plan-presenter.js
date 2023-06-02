@@ -33,6 +33,8 @@ export default class PlanPresenter {
       eventsListContainer: this.#eventsListComponent.element,
       onDataChange: this.#handleViewAction,
       onDestroy: onNewEventDestroy,
+      destinations: this.destinations,
+      offers: this.offers,
     });
 
     this.#eventsModel.addObserver(this.#handleModelEvent);
