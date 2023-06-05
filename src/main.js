@@ -1,6 +1,6 @@
 import {render} from './framework/render.js';
 import PlanPresenter from './presenter/plan-presenter.js';
-import InfoPresenter from './presenter/info-presenter.js';
+// import InfoPresenter from './presenter/info-presenter.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import EventsModel from './model/events-model.js';
 import FilterModel from './model/filter-model.js';
@@ -27,10 +27,10 @@ const planPresenter = new PlanPresenter({
   onNewEventDestroy: handleNewEventFormClose,
 });
 
-const infoPresenter = new InfoPresenter({
-  infoContainer: tripMainContainer,
-  eventsModel: eventsModel,
-});
+// const infoPresenter = new InfoPresenter({
+//   infoContainer: tripMainContainer,
+//   eventsModel: eventsModel,
+// });
 
 const filterPresenter = new FilterPresenter({
   filterContainer: filtersContainer,
