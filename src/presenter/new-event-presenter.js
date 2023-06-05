@@ -66,7 +66,6 @@ export default class NewEventPresenter {
   #handleDeleteClick = () => {
     this.destroy();
     this.#handleModeChange();
-
   };
 
   #escKeyDownHandler = (evt) => {
