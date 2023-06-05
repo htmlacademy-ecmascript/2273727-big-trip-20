@@ -51,9 +51,10 @@ function handleNewEventButtonClick() {
   newEventButtonComponent.element.disabled = true;
 }
 
-render(newEventButtonComponent, tripMainContainer);
-
-infoPresenter.init();
+// infoPresenter.init();
 filterPresenter.init();
 planPresenter.init();
-
+eventsModel.init()
+  .finally(() => {
+    render(newEventButtonComponent, tripMainContainer);
+  });

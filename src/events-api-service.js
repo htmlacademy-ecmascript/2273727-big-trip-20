@@ -29,6 +29,7 @@ export default class EventsApiService extends ApiService {
       .then(ApiService.parseResponse);
   }
 
+
   get offers() {
     return this._load({url: 'offers'})
       .then(ApiService.parseResponse);
@@ -36,12 +37,12 @@ export default class EventsApiService extends ApiService {
 
   #adaptToServer(event) {
     const adaptedEvent = {...event,
-      'base_price': event.basePrice,
+      'base_price': Number(event.basePrice),
       'date_from': event.dateFrom,
       'date_to': event.dateTo,
       'is_favorite': event.isFavorite,
     };
-
+    console.log(adaptedEvent);
     delete adaptedEvent.basePrice;
     delete adaptedEvent.dateFrom;
     delete adaptedEvent.dateTo;
