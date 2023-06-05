@@ -37,9 +37,6 @@ const newEventButtonComponent = new NewEventButtonView({
 
 function handleNewEventFormClose() {
   newEventButtonComponent.element.disabled = false;
-  if (planPresenter.events.length === 0) {
-    planPresenter.renderNoEvents();
-  }
 }
 
 function handleNewEventButtonClick() {

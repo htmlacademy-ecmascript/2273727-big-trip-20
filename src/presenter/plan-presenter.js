@@ -35,6 +35,7 @@ export default class PlanPresenter {
       onDestroy: onNewEventDestroy,
       destinations: this.destinations,
       offers: this.offers,
+      onModeChange: this.#handleModeChange,
     });
 
     this.#eventsModel.addObserver(this.#handleModelEvent);
@@ -74,11 +75,16 @@ export default class PlanPresenter {
     this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     this.#newEventPresenter.init();
-    remove(this.#noEventComponent);
+    if (this.events.length === 0) {
+      remove(this.#noEventComponent);
+    }
   }
 
   #handleModeChange = () => {
     this.#newEventPresenter.destroy();
+    if (this.events.length === 0) {
+      this.#renderNoEvents();
+    }
     this.#eventPresenters.forEach((presenter) => presenter.resetView());
   };
 
@@ -150,7 +156,7 @@ export default class PlanPresenter {
         offers: offers}));
   }
 
-  renderNoEvents() {
+  #renderNoEvents() {
     const events = this.#eventsModel.events;
     const isEmpty = (events.length === 0);
     this.#noEventComponent = new NoEventView({
@@ -190,7 +196,7 @@ export default class PlanPresenter {
     render(this.#planComponent, this.#planContainer);
 
     if (this.events.length === 0) {
-      this.renderNoEvents();
+      this.#renderNoEvents();
       return;
     }
 
