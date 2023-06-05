@@ -20,7 +20,6 @@ export default class EventsApiService extends ApiService {
     });
 
     const parsedResponse = await ApiService.parseResponse(response);
-
     return parsedResponse;
   }
 
@@ -42,7 +41,6 @@ export default class EventsApiService extends ApiService {
       'date_to': event.dateTo,
       'is_favorite': event.isFavorite,
     };
-    console.log(adaptedEvent);
     delete adaptedEvent.basePrice;
     delete adaptedEvent.dateFrom;
     delete adaptedEvent.dateTo;
