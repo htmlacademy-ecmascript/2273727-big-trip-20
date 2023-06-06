@@ -4,6 +4,8 @@ import {UpdateType} from '../const.js';
 export default class EventsModel extends Observable {
   #eventsApiService = null;
   #events = [];
+  #destinations = [];
+  #offers = [];
 
   constructor({eventsApiService}) {
     super();
@@ -14,13 +16,9 @@ export default class EventsModel extends Observable {
     return this.#events;
   }
 
-  #destinations = [];
-
   get destinations() {
     return this.#destinations;
   }
-
-  #offers = [];
 
   get offers() {
     return this.#offers;

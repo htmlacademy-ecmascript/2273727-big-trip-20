@@ -1,6 +1,6 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import { humanizeDateForEdit, parseDateFromEditFormat, capitalizeFirstLetter } from '../utils/event.js';
-import { WAYPOINT_TYPES, DESTINATIONS_NAMES } from '../const.js';
+import {humanizeDateForEdit, parseDateFromEditFormat, capitalizeFirstLetter} from '../utils/event.js';
+
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
@@ -13,24 +13,6 @@ const DEFAULT_EVENT = {
   offers: [],
   type: 'taxi'
 };
-
-const createTypesTemplate = (currentType) => WAYPOINT_TYPES.map((type) => `
-    <div class="event__type-item">
-      <input
-        id="event-type-${type}-1"
-        class="event__type-input  visually-hidden"
-        type="radio" name="event-type"
-        value="${type}"
-        ${currentType === type ? 'checked' : ''}
-      >
-      <label
-        class="event__type-label  event__type-label--${type}"
-        for="event-type-${type}-1"
-      >${capitalizeFirstLetter(type)}</label>
-    </div>
-  `).join('');
-
-const createDestinationsTemplate = () => DESTINATIONS_NAMES.map((destination) => `<option value="${destination}"></option>`);
 
 function createEventEditTemplate(state, destinations, offers) {
   const {event} = state;
@@ -57,6 +39,28 @@ function createEventEditTemplate(state, destinations, offers) {
         </label>
       </div>`)
     .join('');
+
+  const WAYPOINT_TYPES = offers.map((offer) => offer.type);
+
+  const createTypesTemplate = (currentType) => WAYPOINT_TYPES.map((concreteType) => `
+    <div class="event__type-item">
+      <input
+        id="event-type-${concreteType}-1"
+        class="event__type-input  visually-hidden"
+        type="radio" name="event-type"
+        value="${concreteType}"
+        ${currentType === concreteType ? 'checked' : ''}
+      >
+      <label
+        class="event__type-label  event__type-label--${concreteType}"
+        for="event-type-${concreteType}-1"
+      >${capitalizeFirstLetter(concreteType)}</label>
+    </div>
+  `).join('');
+
+  const DESTINATIONS_NAMES = destinations.map((dstntn) => dstntn.name);
+
+  const createDestinationsTemplate = () => DESTINATIONS_NAMES.map((dstntn) => `<option value="${dstntn}"></option>`);
 
   const typesTemplate = createTypesTemplate(type);
   const isEventNew = !state.event.id;
