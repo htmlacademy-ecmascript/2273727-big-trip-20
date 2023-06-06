@@ -27,7 +27,6 @@ function createEventEditTemplate(state, destinations, offers) {
     .join('') : '';
 
   const isChecked = (offer) => event.offers.includes(offer.id) ? 'checked' : '';
-
   const concreteOffers = offers.find((offer) => offer.type === type).offers;
 
   const offersList = concreteOffers
