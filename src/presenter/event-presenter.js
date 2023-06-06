@@ -64,7 +64,8 @@ export default class EventPresenter {
     }
 
     if (this.#mode === Mode.EDITING) {
-      replace(this.#eventEditComponent, prevEventEditComponent);
+      replace(this.#eventComponent, prevEventEditComponent);
+      this.#mode = Mode.DEFAULT;
     }
 
     remove(prevEventComponent);
@@ -82,6 +83,32 @@ export default class EventPresenter {
       this.#replaceRedactorToEvent();
     }
   }
+
+  setSaving() {
+    if (this.#mode === Mode.EDITING) {
+      this.#eventEditComponent.updateElement({
+        isDisabled: true,
+        isSaving: true,
+      });
+    }
+  }
+
+  setDeleting() {
+    if (this.#mode === Mode.EDITING) {
+      this.#eventEditComponent.updateElement({
+        isDisabled: true,
+        isDeleting: true,
+      });
+    }
+  }
+
+  // this.updateElement({
+  //   event: {
+  //     ...this._state.event,
+  //     type: evt.target.value,
+  //     offers: [],
+  //   }
+  // });
 
   #replaceEventToRedactor() {
     replace(this.#eventEditComponent, this.#eventComponent);
@@ -139,6 +166,5 @@ export default class EventPresenter {
       UpdateType.MINOR,
       event,
     );
-    this.#replaceRedactorToEvent();
   };
 }

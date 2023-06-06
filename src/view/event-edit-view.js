@@ -15,16 +15,16 @@ const DEFAULT_EVENT = {
 };
 
 function createEventEditTemplate(state, destinations, offers) {
-  const {event} = state;
+  const {event, isDisabled, isSaving, isDeleting} = state;
   const {basePrice, dateFrom, dateTo, type} = event;
   const dateFromFull = humanizeDateForEdit(dateFrom);
   const dateToFull = humanizeDateForEdit(dateTo);
   const isEventNew = !state.event.id;
   const destination = destinations.find((dstntn) => dstntn.id === event.destination);
 
-  const picturesList = destination ? destination.pictures
+  const picturesList = destination.pictures
     .map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`)
-    .join('') : '';
+    .join('');
 
   const isChecked = (offer) => event.offers.includes(offer.id) ? 'checked' : '';
   const concreteOffers = offers.find((offer) => offer.type === type).offers;
@@ -32,7 +32,7 @@ function createEventEditTemplate(state, destinations, offers) {
   const offersList = concreteOffers
     .map((offer) => `
       <div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="${offer.id}" type="checkbox" name="event-offer-luggage" ${isChecked(offer)}>
+        <input class="event__offer-checkbox  visually-hidden" id="${offer.id}" type="checkbox" name="event-offer" ${isChecked(offer)}}>
         <label class="event__offer-label" for="${offer.id}">
           <span class="event__offer-title">${offer.title}</span>
           &plus;&euro;&nbsp;
@@ -66,9 +66,10 @@ function createEventEditTemplate(state, destinations, offers) {
   const typesTemplate = createTypesTemplate(type);
 
   const buttonsTemplate = isEventNew ? `
-    <button class="event__reset-btn" type="reset">Cancel</button>` : `
-    <button class="event__reset-btn" type="reset">Delete</button>
-    <button class="event__rollup-btn" type="button"><span class="visually-hidden">Open event</span></button>
+    <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>Cancel</button>`
+    : `
+    <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${isDeleting ? 'Deleting...' : 'Delete'}</button>
+    <button class="event__rollup-btn" type="button" ${isDisabled ? 'disabled' : ''}><span class="visually-hidden">Open event</span></button>
   `;
 
   return (
@@ -80,7 +81,7 @@ function createEventEditTemplate(state, destinations, offers) {
             <span class="visually-hidden">Choose event type</span>
             <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
           </label>
-          <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
+          <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox" ${isDisabled ? 'disabled' : ''}>
 
           <div class="event__type-list">
             <fieldset class="event__type-group">
@@ -94,7 +95,7 @@ function createEventEditTemplate(state, destinations, offers) {
           <label class="event__label  event__type-output" for="event-destination-1">
             ${type}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1" ${isDisabled ? 'disabled' : ''}>
           <datalist id="destination-list-1">
             ${createDestinationsTemplate()}
           </datalist>
@@ -102,10 +103,10 @@ function createEventEditTemplate(state, destinations, offers) {
 
         <div class="event__field-group  event__field-group--time">
           <label class="visually-hidden" for="event-start-time-1">From</label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateFromFull}" required>
+          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateFromFull}" required ${isDisabled ? 'disabled' : ''}>
           &mdash;
           <label class="visually-hidden" for="event-end-time-1">To</label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dateToFull}" required>
+          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dateToFull}" required ${isDisabled ? 'disabled' : ''}>
         </div>
 
         <div class="event__field-group  event__field-group--price">
@@ -113,10 +114,10 @@ function createEventEditTemplate(state, destinations, offers) {
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${basePrice}" required>
+          <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${basePrice}" required ${isDisabled ? 'disabled' : ''}>
         </div>
 
-        <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
+        <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
         ${buttonsTemplate}
       </header>
       <section class="event__details">
@@ -326,8 +327,21 @@ export default class EventEditView extends AbstractStatefulView {
     });
   }
 
-  static parseEventToState = ({event}) => ({event}); // ! пометка чтобы не забыть: как пользоваться этими штуками показано в коммите 6.1.1
+  static parseEventToState(event) {
+    return {...event,
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false,
+    };
+  }
 
-  static parseStateToEvent = (state) => state.event; // ОБНОВИЛ ФУНКЦИЮ, ЧТОБЫ ОНА ХРАНИЛА РАЗНЫЕ ОБЪЕКТЫ С СОСТОЯНИЯМИ ВНУТРИ ОДНОГО СОСТОЯНИЯ
-  // функции парсинга дополнить, когда будут "усложнения" - всякие isRepeating и тд
+  static parseStateToEvent(state) {
+    const event = state.event;
+
+    delete event.isDisabled;
+    delete event.isSaving;
+    delete event.isDeleting;
+
+    return event;
+  }
 }
