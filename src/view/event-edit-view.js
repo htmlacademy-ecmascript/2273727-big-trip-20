@@ -8,7 +8,7 @@ const DEFAULT_EVENT = {
   basePrice: null,
   dateFrom: '',
   dateTo: '',
-  destination: 1,
+  destination: 'b4babe62-7c73-41db-b7a7-7e809883f987',
   isFavorite: false,
   offers: [],
   type: 'taxi'
@@ -19,8 +19,10 @@ function createEventEditTemplate(state, destinations, offers) {
   const {basePrice, dateFrom, dateTo, type} = event;
   const dateFromFull = humanizeDateForEdit(dateFrom);
   const dateToFull = humanizeDateForEdit(dateTo);
+  const isEventNew = !state.event.id;
   const destination = destinations.find((dstntn) => dstntn.id === event.destination);
-  const picturesList = destination.pictures ? destination.pictures
+
+  const picturesList = destination ? destination.pictures
     .map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`)
     .join('') : '';
 
@@ -63,7 +65,6 @@ function createEventEditTemplate(state, destinations, offers) {
   const createDestinationsTemplate = () => DESTINATIONS_NAMES.map((dstntn) => `<option value="${dstntn}"></option>`);
 
   const typesTemplate = createTypesTemplate(type);
-  const isEventNew = !state.event.id;
 
   const buttonsTemplate = isEventNew ? `
     <button class="event__reset-btn" type="reset">Cancel</button>` : `
