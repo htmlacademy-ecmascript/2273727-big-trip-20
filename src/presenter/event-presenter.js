@@ -102,13 +102,22 @@ export default class EventPresenter {
     }
   }
 
-  // this.updateElement({
-  //   event: {
-  //     ...this._state.event,
-  //     type: evt.target.value,
-  //     offers: [],
-  //   }
-  // });
+  setAborting() {
+    if (this.#mode === Mode.DEFAULT) {
+      this.#eventComponent.shake();
+      return;
+    }
+
+    const resetRedactorState = () => {
+      this.#eventEditComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this.#eventEditComponent.shake(resetRedactorState);
+  }
 
   #replaceEventToRedactor() {
     replace(this.#eventEditComponent, this.#eventComponent);
