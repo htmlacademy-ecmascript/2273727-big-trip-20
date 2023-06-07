@@ -8,7 +8,7 @@ const DEFAULT_EVENT = {
   basePrice: null,
   dateFrom: '',
   dateTo: '',
-  destination: 'b4babe62-7c73-41db-b7a7-7e809883f987',
+  destination: 'd9f3eb72-1733-4fbe-8c9f-808be0644cd8',
   isFavorite: false,
   offers: [],
   type: 'taxi'
@@ -21,7 +21,6 @@ function createEventEditTemplate(state, destinations, offers) {
   const dateToFull = humanizeDateForEdit(dateTo);
   const isEventNew = !state.event.id;
   const destination = destinations.find((dstntn) => dstntn.id === event.destination);
-
   const picturesList = destination.pictures
     .map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`)
     .join('');
@@ -32,7 +31,7 @@ function createEventEditTemplate(state, destinations, offers) {
   const offersList = concreteOffers
     .map((offer) => `
       <div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="${offer.id}" type="checkbox" name="event-offer" ${isChecked(offer)}}>
+        <input class="event__offer-checkbox  visually-hidden" id="${offer.id}" type="checkbox" name="event-offer" ${isChecked(offer)}>
         <label class="event__offer-label" for="${offer.id}">
           <span class="event__offer-title">${offer.title}</span>
           &plus;&euro;&nbsp;

@@ -14,7 +14,6 @@ function createTripInfoMainTemplate(events, destinations) {
 }
 
 function createTripInfoCostTemplate(events, offers) {
-  // функция. подсчитывающая baseprice всех ивентов + всех выбранных офферов у них
   const sumBasePrice = (objects) => {
     let sum = 0;
     for (let i = 0; i < objects.length; i++) {
@@ -36,7 +35,7 @@ function createTripInfoCostTemplate(events, offers) {
     }
     return sum;
   };
-  // ! как вариант - вынести это все потом в отдельные функции
+
   const price = sumBasePrice(events) + sumIncludedOffersPrice(allIncludedOffers);
 
   return `<p class="trip-info__cost">
