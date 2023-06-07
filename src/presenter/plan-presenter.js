@@ -2,6 +2,7 @@ import {render, RenderPosition, remove} from '../framework/render.js';
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 import PlanView from '../view/plan-view.js';
 import SortView from '../view/sort-view.js';
+import InfoView from '../view/info-view.js';
 import EventsListView from '../view/events-list-view.js';
 import NoEventView from '../view/no-event-view.js';
 import LoadingView from '../view/loading-view.js';
@@ -21,9 +22,11 @@ export default class PlanPresenter {
   #filterModel = null;
 
   #planComponent = new PlanView();
+  #mainComponent = document.querySelector('.trip-main');
   #eventsListComponent = new EventsListView();
   #loadingComponent = new LoadingView();
   #sortComponent = null;
+  #infoComponent = null;
   #noEventComponent = null;
 
   #eventPresenters = new Map();
@@ -173,6 +176,15 @@ export default class PlanPresenter {
     render(this.#sortComponent, this.#planComponent.element, RenderPosition.AFTERBEGIN);
   }
 
+  #renderInfo() {
+    const events = this.events;
+    const destinations = this.destinations;
+    const offers = this.offers;
+    this.#infoComponent = new InfoView({events, destinations, offers});
+
+    render(this.#infoComponent, this.#mainComponent, RenderPosition.AFTERBEGIN);
+  }
+
   #renderEvent({event, destinations, offers}) {
     const eventPresenter = new EventPresenter({
       eventsListContainer: this.#eventsListComponent.element,
@@ -246,6 +258,10 @@ export default class PlanPresenter {
       return;
     }
 
+    if (this.#infoComponent) {
+      remove(this.#infoComponent);
+    }
+    this.#renderInfo();
     this.#renderSort();
     this.#renderEventsList();
   }
