@@ -13,6 +13,7 @@ dayjs.extend(customParseFormat);
 // логика работы со временем
 const DATE_FORMAT_FOR_EDIT = 'DD/MM/YY HH:mm';
 const DATE_FORMAT_FOR_EVENT_DATE = 'MMM DD';
+const DATE_FORMAT_FOR_SAME_EVENT_DATE = 'DD';
 const DATE_FORMAT_FOR_EVENT_TIME = 'HH:mm';
 
 const HOURS_IN_DAY = 24;
@@ -42,6 +43,7 @@ const getTimeGap = (dateFrom, dateTo) => {
 
 const humanizeDateForEdit = (date) => date ? dayjs(date).utc().format(DATE_FORMAT_FOR_EDIT) : '';
 const humanizeDateForEvent = (date) => date ? dayjs(date).utc().format(DATE_FORMAT_FOR_EVENT_DATE) : '';
+const humanizeDateForSameEvent = (date) => date ? dayjs(date).utc().format(DATE_FORMAT_FOR_SAME_EVENT_DATE) : '';
 const humanizeTimeFrom = (date) => date ? dayjs(date).utc().format(DATE_FORMAT_FOR_EVENT_TIME) : '';
 const humanizeTimeTo = (date) => date ? dayjs(date).utc().format(DATE_FORMAT_FOR_EVENT_TIME) : '';
 
@@ -90,4 +92,4 @@ function capitalizeFirstLetter(word) {
   return word.charAt(0).toUpperCase() + word.slice(1);
 }
 
-export {humanizeDateForEdit, humanizeDateForEvent, humanizeTimeFrom, humanizeTimeTo, getTimeGap, isEventPast, isEventPresent, isEventFuture, mapIdToOffers, sortByDay, sortByTime, sortByPrice, parseDateFromEditFormat, capitalizeFirstLetter};
+export {humanizeDateForEdit, humanizeDateForEvent, humanizeDateForSameEvent, humanizeTimeFrom, humanizeTimeTo, getTimeGap, isEventPast, isEventPresent, isEventFuture, mapIdToOffers, sortByDay, sortByTime, sortByPrice, parseDateFromEditFormat, capitalizeFirstLetter};

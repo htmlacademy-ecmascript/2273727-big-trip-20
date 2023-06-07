@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { humanizeDateForEvent, mapIdToOffers } from '../utils/event.js';
+import { humanizeDateForEvent, humanizeDateForSameEvent, mapIdToOffers } from '../utils/event.js';
 
 function createTripInfoMainTemplate(events, destinations) {
   const firstDestination = destinations.find((dstntn) => dstntn.id === events[0].destination).name;
@@ -26,7 +26,12 @@ function createTripInfoMainTemplate(events, destinations) {
   }
 
   const firstDate = humanizeDateForEvent(events[0].dateFrom);
-  const lastDate = humanizeDateForEvent(events[0].dateTo); // ! у этой функции НУЖНО СДЕЛАТЬ проверку: если месяц совпадает, то не показывать его
+  let lastDate;
+  if (new Date(events[0].dateFrom).getMonth() === new Date(events[events.length - 1].dateTo).getMonth()) {
+    lastDate = humanizeDateForSameEvent(events[events.length - 1].dateTo);
+  } else {
+    lastDate = humanizeDateForEvent(events[events.length - 1].dateTo);
+  }
   return `<div class="trip-info__main">
             <h1 class="trip-info__title">${firstDestination} ${getMiddleDestination()} ${lastDestination}</h1>
 
