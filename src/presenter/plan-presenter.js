@@ -177,7 +177,7 @@ export default class PlanPresenter {
   }
 
   #renderInfo() {
-    const events = this.events;
+    const events = this.#eventsModel.events.sort(sortByDay);
     const destinations = this.destinations;
     const offers = this.offers;
     this.#infoComponent = new InfoView({events, destinations, offers});
