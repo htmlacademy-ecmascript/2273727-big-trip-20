@@ -5,10 +5,10 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
 const DEFAULT_EVENT = {
-  basePrice: null,
+  basePrice: '',
   dateFrom: '',
   dateTo: '',
-  destination: 'd9f3eb72-1733-4fbe-8c9f-808be0644cd8',
+  destination: '',
   isFavorite: false,
   offers: [],
   type: 'taxi'
@@ -20,8 +20,10 @@ function createEventEditTemplate(state, destinations, offers) {
   const dateFromFull = humanizeDateForEdit(dateFrom);
   const dateToFull = humanizeDateForEdit(dateTo);
   const isEventNew = !state.event.id;
-  const destination = destinations.find((dstntn) => dstntn.id === event.destination);
-  const picturesList = destination.pictures
+
+  const isEventJustOpen = (event.destination === '');
+  const destination = isEventJustOpen ? '' : destinations.find((dstntn) => dstntn.id === event.destination);
+  const picturesList = isEventJustOpen ? '' : destination.pictures
     .map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`)
     .join('');
 
@@ -59,7 +61,6 @@ function createEventEditTemplate(state, destinations, offers) {
   `).join('');
 
   const DESTINATIONS_NAMES = destinations.map((dstntn) => dstntn.name);
-
   const createDestinationsTemplate = () => DESTINATIONS_NAMES.map((dstntn) => `<option value="${dstntn}"></option>`);
 
   const typesTemplate = createTypesTemplate(type);
@@ -94,7 +95,7 @@ function createEventEditTemplate(state, destinations, offers) {
           <label class="event__label  event__type-output" for="event-destination-1">
             ${type}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1" ${isDisabled ? 'disabled' : ''}>
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${isEventJustOpen ? '' : destination.name}" list="destination-list-1" ${isDisabled ? 'disabled' : ''}>
           <datalist id="destination-list-1">
             ${createDestinationsTemplate()}
           </datalist>
@@ -128,11 +129,11 @@ function createEventEditTemplate(state, destinations, offers) {
           </div>
         </section>
 
-        <section class="event__section  event__section--destination">
+        <section class="event__section  event__section--destination ${isEventJustOpen ? 'visually-hidden' : ''}">
           <h3 class="event__section-title  event__section-title--destination">Destination</h3>
           <p class="event__destination-description">${destination.description}</p>
 
-          <div class="event__photos-container">
+          <div class="event__photos-container" >
             <div class="event__photos-tape">
               ${picturesList}
             </div>
