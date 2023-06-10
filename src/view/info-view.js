@@ -4,7 +4,7 @@ import { humanizeDateForEvent, humanizeDateForSameEvent, mapIdToOffers } from '.
 function createTripInfoMainTemplate(events, destinations) {
   const firstDestination = destinations.find((dstntn) => dstntn.id === events[0].destination).name;
   const lastDestination = destinations.find((dstntn) => dstntn.id === events[events.length - 1].destination).name;
-  function getMiddleDestination() {
+  const getMiddleDestination = () => {
     const middleDestinations = [];
 
     for (let i = 1; i < events.length - 1; i++) {
@@ -23,7 +23,7 @@ function createTripInfoMainTemplate(events, destinations) {
     } else {
       return '...';
     }
-  }
+  };
 
   const firstDate = humanizeDateForEvent(events[0].dateFrom);
   let lastDate;
