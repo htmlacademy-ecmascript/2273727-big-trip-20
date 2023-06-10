@@ -20,7 +20,6 @@ function createEventEditTemplate(state, destinations, offers) {
   const dateFromFull = humanizeDateForEdit(dateFrom);
   const dateToFull = humanizeDateForEdit(dateTo);
   const isEventNew = !state.event.id;
-
   const isEventJustOpen = (event.destination === '');
   const destination = isEventJustOpen ? '' : destinations.find((dstntn) => dstntn.id === event.destination);
   const picturesList = isEventJustOpen ? '' : destination.pictures
@@ -29,6 +28,7 @@ function createEventEditTemplate(state, destinations, offers) {
 
   const isChecked = (offer) => event.offers.includes(offer.id) ? 'checked' : '';
   const concreteOffers = offers.find((offer) => offer.type === type).offers;
+  const isOffersEmpty = (concreteOffers.length === 0);
 
   const offersList = concreteOffers
     .map((offer) => `
@@ -121,7 +121,7 @@ function createEventEditTemplate(state, destinations, offers) {
         ${buttonsTemplate}
       </header>
       <section class="event__details">
-        <section class="event__section  event__section--offers">
+        <section class="event__section  event__section--offers ${isOffersEmpty ? 'visually-hidden' : ''}">
           <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
           <div class="event__available-offers">
