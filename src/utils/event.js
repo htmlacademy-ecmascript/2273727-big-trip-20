@@ -10,7 +10,6 @@ dayjs.extend(duration);
 dayjs.extend(relativeTime);
 dayjs.extend(customParseFormat);
 
-// логика работы со временем
 const DATE_FORMAT_FOR_EDIT = 'DD/MM/YY HH:mm';
 const DATE_FORMAT_FOR_EVENT_DATE = 'MMM DD';
 const DATE_FORMAT_FOR_SAME_EVENT_DATE = 'DD';
@@ -49,15 +48,11 @@ const humanizeTimeTo = (date) => date ? dayjs(date).utc().format(DATE_FORMAT_FOR
 
 const parseDateFromEditFormat = (dateString) => dayjs.utc(dateString, DATE_FORMAT_FOR_EDIT).format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
 
-function isEventPast(dateFrom, dateTo) {
-  return (dayjs().isAfter(dayjs(dateFrom)) && dayjs().isAfter(dayjs(dateTo)));
-}
-function isEventPresent(dateFrom, dateTo) {
-  return (dayjs().isAfter(dayjs(dateFrom)) && dayjs().isBefore(dayjs(dateTo)));
-}
-function isEventFuture(dateFrom, dateTo) {
-  return (dayjs().isBefore(dayjs(dateFrom)) && dayjs().isBefore(dayjs(dateTo)));
-}
+const isEventPast = (dateFrom, dateTo) => (dayjs().isAfter(dayjs(dateFrom)) && dayjs().isAfter(dayjs(dateTo)));
+
+const isEventPresent = (dateFrom, dateTo) => (dayjs().isAfter(dayjs(dateFrom)) && dayjs().isBefore(dayjs(dateTo)));
+
+const isEventFuture = (dateFrom, dateTo) => (dayjs().isBefore(dayjs(dateFrom)) && dayjs().isBefore(dayjs(dateTo)));
 
 const findTripConcreteOffers = (eventType, offers) => offers.find((offer) => offer.type === eventType).offers;
 
@@ -66,7 +61,7 @@ const mapIdToOffers = (offers, ids, eventType) => {
   return ids.map((offerId) => concreteOffers.find((offer) => offer.id === offerId));
 };
 
-function sortByDay(eventA, eventB) {
+const sortByDay = (eventA, eventB) => {
   if (dayjs(eventA.dateFrom).isAfter(dayjs(eventB.dateFrom))) {
     return 1;
   }
@@ -78,18 +73,12 @@ function sortByDay(eventA, eventB) {
   if (dayjs(eventA.dateFrom).isBefore(dayjs(eventB.dateFrom))) {
     return -1;
   }
-}
+};
 
-function sortByTime(eventA, eventB) {
-  return dayjs(eventB.dateTo).diff(dayjs(eventB.dateFrom)) - dayjs(eventA.dateTo).diff(dayjs(eventA.dateFrom));
-}
+const sortByTime = (eventA, eventB) => dayjs(eventB.dateTo).diff(dayjs(eventB.dateFrom)) - dayjs(eventA.dateTo).diff(dayjs(eventA.dateFrom));
 
-function sortByPrice(eventA, eventB) {
-  return eventB.basePrice - eventA.basePrice;
-}
+const sortByPrice = (eventA, eventB) => eventB.basePrice - eventA.basePrice;
 
-function capitalizeFirstLetter(word) {
-  return word.charAt(0).toUpperCase() + word.slice(1);
-}
+const capitalizeFirstLetter = (word) => word.charAt(0).toUpperCase() + word.slice(1);
 
 export {humanizeDateForEdit, humanizeDateForEvent, humanizeDateForSameEvent, humanizeTimeFrom, humanizeTimeTo, getTimeGap, isEventPast, isEventPresent, isEventFuture, mapIdToOffers, sortByDay, sortByTime, sortByPrice, parseDateFromEditFormat, capitalizeFirstLetter};
