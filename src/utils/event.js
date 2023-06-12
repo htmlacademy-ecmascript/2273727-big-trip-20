@@ -10,6 +10,7 @@ dayjs.extend(duration);
 dayjs.extend(relativeTime);
 dayjs.extend(customParseFormat);
 
+const ALERT_SHOW_TIME = 3000;
 const DATE_FORMAT_FOR_EDIT = 'DD/MM/YY HH:mm';
 const DATE_FORMAT_FOR_EVENT_DATE = 'MMM DD';
 const DATE_FORMAT_FOR_SAME_EVENT_DATE = 'DD';
@@ -81,4 +82,25 @@ const sortByPrice = (eventA, eventB) => eventB.basePrice - eventA.basePrice;
 
 const capitalizeFirstLetter = (word) => word.charAt(0).toUpperCase() + word.slice(1);
 
-export {humanizeDateForEdit, humanizeDateForEvent, humanizeDateForSameEvent, humanizeTimeFrom, humanizeTimeTo, getTimeGap, isEventPast, isEventPresent, isEventFuture, mapIdToOffers, sortByDay, sortByTime, sortByPrice, parseDateFromEditFormat, capitalizeFirstLetter};
+const showAlert = (message) => {
+  const alertContainer = document.createElement('div');
+  alertContainer.style.zIndex = '100';
+  alertContainer.style.position = 'absolute';
+  alertContainer.style.left = '0';
+  alertContainer.style.top = '0';
+  alertContainer.style.right = '0';
+  alertContainer.style.padding = '10px 3px';
+  alertContainer.style.fontSize = '50px';
+  alertContainer.style.textAlign = 'center';
+  alertContainer.style.backgroundColor = 'orange';
+
+  alertContainer.textContent = message;
+
+  document.body.append(alertContainer);
+
+  setTimeout(() => {
+    alertContainer.remove();
+  }, ALERT_SHOW_TIME);
+};
+
+export {humanizeDateForEdit, humanizeDateForEvent, humanizeDateForSameEvent, humanizeTimeFrom, humanizeTimeTo, getTimeGap, isEventPast, isEventPresent, isEventFuture, mapIdToOffers, sortByDay, sortByTime, sortByPrice, parseDateFromEditFormat, capitalizeFirstLetter, showAlert};

@@ -14,7 +14,7 @@ const DEFAULT_EVENT = {
   type: 'taxi'
 };
 
-function createEventEditTemplate(state, destinations, offers) {
+const createEventEditTemplate = (state, destinations, offers) => {
   const {event, isDisabled, isSaving, isDeleting} = state;
   const {basePrice, dateFrom, dateTo, type} = event;
   const dateFromFull = humanizeDateForEdit(dateFrom);
@@ -113,7 +113,7 @@ function createEventEditTemplate(state, destinations, offers) {
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${basePrice}" required ${isDisabled ? 'disabled' : ''}>
+          <input class="event__input  event__input--price" id="event-price-1" type="number" min="1" name="event-price" value="${basePrice}" required ${isDisabled ? 'disabled' : ''}>
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
@@ -142,7 +142,7 @@ function createEventEditTemplate(state, destinations, offers) {
     </form>
   </li>`
   );
-}
+};
 
 export default class EventEditView extends AbstractStatefulView {
   #datepickers = null;
