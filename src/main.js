@@ -35,7 +35,6 @@ const main = async() => {
   filterPresenter.init();
   planPresenter.init();
   eventsModel.init();
-
 };
 
 main();

@@ -1,7 +1,7 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { humanizeDateForEvent, humanizeDateForSameEvent, mapIdToOffers } from '../utils/event.js';
 
-function createTripInfoMainTemplate(events, destinations) {
+const createTripInfoMainTemplate = (events, destinations) => {
   const firstDestination = destinations.find((dstntn) => dstntn.id === events[0].destination).name;
   const lastDestination = destinations.find((dstntn) => dstntn.id === events[events.length - 1].destination).name;
   const getMiddleDestination = () => {
@@ -37,9 +37,9 @@ function createTripInfoMainTemplate(events, destinations) {
 
             <p class="trip-info__dates">${firstDate}&nbsp;&mdash;&nbsp;${lastDate}</p>
           </div>`;
-}
+};
 
-function createTripInfoCostTemplate(events, offers) {
+const createTripInfoCostTemplate = (events, offers) => {
   const sumBasePrice = (objects) => {
     let sum = 0;
     for (let i = 0; i < objects.length; i++) {
@@ -67,15 +67,15 @@ function createTripInfoCostTemplate(events, offers) {
   return `<p class="trip-info__cost">
             Total: &euro;&nbsp;<span class="trip-info__cost-value">${price}</span>
           </p>`;
-}
+};
 
-function createTripInfoTemplate(events, destinations, offers) {
-  return /*HTML*/ `
+const createTripInfoTemplate = (events, destinations, offers) =>
+  /*HTML*/ `
     <section class="trip-main__trip-info  trip-info">
       ${createTripInfoMainTemplate(events, destinations)}
       ${createTripInfoCostTemplate(events, offers)}
     </section>`;
-}
+
 
 export default class InfoView extends AbstractView {
   #events = null;
