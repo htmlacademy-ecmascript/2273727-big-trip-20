@@ -9,6 +9,7 @@ import LoadingView from '../view/loading-view.js';
 import ErrorView from '../view/error-view.js';
 import EventPresenter from './event-presenter.js';
 import NewEventPresenter from './new-event-presenter.js';
+import NewEventButtonView from '../view/new-event-button-view.js';
 import {SortType, UpdateType, UserAction, FilterType} from '../const.js';
 import {sortByDay, sortByTime, sortByPrice} from '../utils/event.js';
 import {filter} from '../utils/filter.js';
@@ -29,7 +30,7 @@ export default class PlanPresenter {
   #sortComponent = null;
   #infoComponent = null;
   #noEventComponent = null;
-
+  #newEventButtonComponent = null;
   #eventPresenters = new Map();
   #newEventPresenter = null;
   #currentSortType = SortType.DAY;
@@ -40,7 +41,7 @@ export default class PlanPresenter {
     upperLimit: TimeLimit.UPPER_LIMIT,
   });
 
-  constructor({planContainer, eventsModel, filterModel, onNewEventDestroy}) {
+  constructor({planContainer, eventsModel, filterModel}) {
     this.#planContainer = planContainer;
     this.#eventsModel = eventsModel;
     this.#filterModel = filterModel;
@@ -48,10 +49,14 @@ export default class PlanPresenter {
     this.#newEventPresenter = new NewEventPresenter({
       eventsListContainer: this.#eventsListComponent.element,
       onDataChange: this.#handleViewAction,
-      onDestroy: onNewEventDestroy,
+      onDestroy: this.#handleNewEventFormClose,
       destinations: this.destinations,
       offers: this.offers,
       onModeChange: this.#handleModeChange,
+    });
+
+    this.#newEventButtonComponent = new NewEventButtonView({
+      onClick: this.#handleNewEventButtonClick,
     });
 
     this.#eventsModel.addObserver(this.#handleModelEvent);
@@ -154,6 +159,7 @@ export default class PlanPresenter {
         this.#isLoading = false;
         remove(this.#loadingComponent);
         this.#renderPlan();
+        render(this.#newEventButtonComponent, document.querySelector('.trip-main'));
         break;
       case UpdateType.ERROR:
         this.#isLoading = false;
@@ -171,6 +177,15 @@ export default class PlanPresenter {
     this.#currentSortType = sortType;
     this.#clearPlan();
     this.#renderPlan();
+  };
+
+  #handleNewEventButtonClick = () => {
+    this.createEvent();
+    this.#newEventButtonComponent.element.disabled = true;
+  };
+
+  #handleNewEventFormClose = () => {
+    this.#newEventButtonComponent.element.disabled = false;
   };
 
   #renderSort() {
