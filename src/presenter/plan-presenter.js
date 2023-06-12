@@ -6,6 +6,7 @@ import InfoView from '../view/info-view.js';
 import EventsListView from '../view/events-list-view.js';
 import NoEventView from '../view/no-event-view.js';
 import LoadingView from '../view/loading-view.js';
+import ErrorView from '../view/error-view.js';
 import EventPresenter from './event-presenter.js';
 import NewEventPresenter from './new-event-presenter.js';
 import {SortType, UpdateType, UserAction, FilterType} from '../const.js';
@@ -154,6 +155,11 @@ export default class PlanPresenter {
         remove(this.#loadingComponent);
         this.#renderPlan();
         break;
+      case UpdateType.ERROR:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#renderError('Can\'t reach server. Please, try again.');
+        break;
     }
   };
 
@@ -206,6 +212,11 @@ export default class PlanPresenter {
 
   #renderLoading() {
     render(this.#loadingComponent, this.#planComponent.element, RenderPosition.AFTERBEGIN);
+  }
+
+  #renderError(error) {
+    const errorComponent = new ErrorView({ message: error });
+    render(errorComponent, this.#planComponent.element, RenderPosition.AFTERBEGIN);
   }
 
   #renderNoEvents() {
